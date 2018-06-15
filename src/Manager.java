@@ -9,7 +9,7 @@ public class Manager extends Controller{
     private int managerID;
     private int branch;
 
-    private void validateID () {
+    public void validateID () {
         int               input;
         int               id;
         boolean           quit = false;

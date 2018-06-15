@@ -185,7 +185,9 @@ public class Controller implements ActionListener {
 
                 switch(choice)
                 {
-                    case 1:  //insertItem(); //TODO
+                    case 1:
+                        Manager m = new Manager();
+                        m.validateID();
                         break;
                     case 2:  //deleteItem();
                         break;
