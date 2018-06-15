@@ -13,6 +13,7 @@ public class Member extends controller {
     int memID;
 
     public void memberShowMenu() {
+        connect("ora_a1q1b", "a24581167");
 
         //enter system
         checkPoint();
