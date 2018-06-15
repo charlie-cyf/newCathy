@@ -49,7 +49,7 @@ CREATE TABLE Storage (
 	FOREIGN KEY (branchNumber) REFERENCES Branch
 		ON DELETE CASCADE
 );
-
+ 
 grant select on Storage to public;
 
 CREATE TABLE Deal (
@@ -62,7 +62,7 @@ grant select on Deal to public;
 CREATE TABLE ItemsInDeal (
 	itemID INTEGER NOT NULL,
 	dealName CHAR(20),
-	percentage NUMBER(1, 2),
+	percentage NUMBER(3, 2),
 	primary key (itemID, dealName),
 	FOREIGN KEY (itemID) REFERENCES Item
 		ON DELETE CASCADE,

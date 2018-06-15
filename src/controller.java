@@ -185,13 +185,15 @@ public class Controller implements ActionListener {
 
                 switch(choice)
                 {
-                    case 1:  //TODO
+                    case 1:
                         Manager m = new Manager();
                         m.validateID();
                         break;
                     case 2:  //deleteItem();
                         break;
-                    case 3:  //updateItemPrice();
+                    case 3:
+                        Member mem = new Member();
+                        mem.memberShowMenu();
                         break;
                     case 4:  quit = true;
                 }
