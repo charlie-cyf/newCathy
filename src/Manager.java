@@ -31,7 +31,7 @@ public class Manager extends controller{
 
                     rs = ps.executeQuery();
 
-                    if (rs.getRow() != 1) {
+                    if (rs.next()) {
                         System.out.print("Access granted: Welcome.");
                         managerID = id;
                         showMenu();

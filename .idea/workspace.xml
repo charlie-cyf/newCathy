@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="e500cac2-82d8-4dac-a7f9-d02ba2d56b0d" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Manager.class" afterPath="$PROJECT_DIR$/src/Manager.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Member.class" afterPath="$PROJECT_DIR$/src/Member.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Manager.java" afterPath="$PROJECT_DIR$/src/Manager.java" />
     </list>
@@ -31,7 +30,7 @@
         <entry file="file://$PROJECT_DIR$/src/Manager.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="510">
-              <caret line="33" column="43" lean-forward="true" selection-start-line="33" selection-start-column="43" selection-end-line="33" selection-end-column="43" />
+              <caret line="33" column="36" lean-forward="true" selection-start-line="33" selection-start-column="36" selection-end-line="33" selection-end-column="36" />
               <folding />
             </state>
           </provider>
@@ -40,8 +39,8 @@
       <file leaf-file-name="update_tables.sql" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/update_tables.sql">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="11" column="109" lean-forward="true" selection-start-line="11" selection-start-column="109" selection-end-line="11" selection-end-column="109" />
+            <state relative-caret-position="782">
+              <caret line="46" column="68" lean-forward="true" selection-start-line="46" selection-start-column="63" selection-end-line="46" selection-end-column="68" />
               <folding />
             </state>
           </provider>
@@ -452,8 +451,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/update_tables.sql">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="11" column="109" lean-forward="true" selection-start-line="11" selection-start-column="109" selection-end-line="11" selection-end-column="109" />
+        <state relative-caret-position="782">
+          <caret line="46" column="68" lean-forward="true" selection-start-line="46" selection-start-column="63" selection-end-line="46" selection-end-column="68" />
           <folding />
         </state>
       </provider>
@@ -461,7 +460,7 @@
     <entry file="file://$PROJECT_DIR$/src/Manager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="510">
-          <caret line="33" column="43" lean-forward="true" selection-start-line="33" selection-start-column="43" selection-end-line="33" selection-end-column="43" />
+          <caret line="33" column="36" lean-forward="true" selection-start-line="33" selection-start-column="36" selection-end-line="33" selection-end-column="36" />
           <folding />
         </state>
       </provider>
