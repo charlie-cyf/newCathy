@@ -1,5 +1,7 @@
 // We need to import the java.sql package to use JDBC
 import java.sql.*;
+import java.math.*;
+import java.lang.Object;
 
 // for reading from the command line
 import java.io.*;
@@ -183,9 +185,12 @@ public class Controller implements ActionListener {
 
                 switch(choice)
                 {
-                    case 1:  //insertItem(); break; //TODO
-                    case 2:  //deleteItem(); break;
-                    case 3:  //updateItemPrice(); break;
+                    case 1:  //insertItem(); //TODO
+                        break;
+                    case 2:  //deleteItem();
+                        break;
+                    case 3:  //updateItemPrice();
+                        break;
                     case 4:  quit = true;
                 }
             }
