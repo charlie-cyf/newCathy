@@ -16,6 +16,7 @@ public class Manager extends controller{
         ResultSet         rs;
         PreparedStatement ps;
 
+        System.out.println(connect("ora_a1q1b", "a24581167"));
         try {
             while (!quit) {
                 System.out.print("\n\nPlease enter your manager id or press enter 0 to quit: \n");
@@ -28,7 +29,7 @@ public class Manager extends controller{
                     ps.setInt(1, id);
 
 
-                    rs = ps.executeQuery("SELECT * FROM Clerk WHERE clerkID = ? AND type = 'Manager'");
+                    rs = ps.executeQuery();
 
                     if (rs != null) {
                         System.out.print("Access granted: Welcome.");
