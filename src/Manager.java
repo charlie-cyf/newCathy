@@ -1,23 +1,160 @@
-
-
 public class Manager extends Controller{
 
-    public void managerShowMenu(){
-        // TODO:
+    private int id;
+    private int branch;
+
+    private void validateID () {
+        int     input;
+        int     id;
+        boolean quit = false;
+        Statement  stmt;
+        ResultSet  rs;
+
+        while (!quit) {
+            System.out.print("\n\nPlease enter your manager id or press enter 0 to quit: \n");
+
+            input = Integer.parseInt(in.readLine());
+
+            if (input != 0) {
+                id = input;
+                stmt = con.createStatement();
+                rs = stmt.executeQuery("SELECT * FROM Clerk WHERE clerkID = ? AND type = 'Manager'");
+                ps.setInt(1, id);
+
+                if (rs != null) {
+                    System.out.print("Access granted: Welcome.");
+                    showMenu();
+                } else {
+                    System.out.print("Access denied: Invalid manager ID.");
+                }
+
+                // close the statement;
+                // the ResultSet will also be closed
+                stmt.close();
+            } else { // User quits the system
+                quit = true;
+                System.exit(0);
+            }
+        }
     }
-    private void manageEmployee(){
-        // TODO:
+
+    public void showMenu(){
+        int choice;
+        boolean quit = false;
+
+        while (!quit)
+        {
+            System.out.print("1.  Manage employee\n");
+            System.out.print("2.  Manage item\n");
+            System.out.print("3.  Manage membership\n");
+            System.out.print("4.  Manage deal\n");
+            System.out.print("5.  Generate transaction report\n");
+            System.out.print("6.  Quit\n>> ");
+
+            choice = Integer.parseInt(in.readLine());
+
+            System.out.println(" ");
+
+            switch(choice)
+            {
+                case 1:  manageEmployeeWage(); break;
+                case 2:  manageItem(); break;
+                case 3:  manageMembership(); break;
+                case 4:  manageDeal(); break;
+                case 5:  getReport(); break;
+                case 6:  quit = true;
+            }
+        }
     }
-    private void manageItem() {
-        // TODO:
+
+    private manageEmployeeWage() {
+        int id;
+        int wage;
+        PreparedStatement  ps;
+        try {
+            ps = con.prepareStatement("UPDATE Clerk SET wage = ? WHERE clerkID = ?");
+
+            System.out.print("\nClerk ID: ");
+            id = Integer.parseInt(in.readLine());
+            ps.setInt(2, clerkID);
+
+            System.out.print("\nSet new wage: ");
+            wage = int.parseInt(in.readLine());
+            while (wage < 0) {
+                System.out.print("\nWage cannot be negative, please try again: ");
+                wage = Integer.parseInt(in.readLine());
+            }
+            ps.setInt(1, wage);
+
+            int rowCount = ps.executeUpdate();
+            if (rowCount == 0) {
+                System.out.println("\nItem " + itemID + " does not exist!");
+            }
+
+            con.commit();
+
+            ps.close();
+        } catch (IOException e) {
+            System.out.println("IOException!");
+        }
+        catch (SQLException ex) {
+            System.out.println("Message: " + ex.getMessage());
+
+            try
+            {
+                con.rollback();
+            }
+            catch (SQLException ex2)
+            {
+                System.out.println("Message: " + ex2.getMessage());
+                System.exit(-1);
+            }
+        }
+
+    private manageItem(){
+
+            int choice;
+
+            boolean quit = false;
+
+            while (!quit) {
+                System.out.print("1.  Manage item storage\n");
+                System.out.print("2.  Display item storage\n");
+                System.out.print("3.  Manage item price\n");
+                System.out.print("4.  Go back\n>> ");
+
+                choice = Integer.parseInt(in.readLine());
+
+                System.out.println(" ");
+
+                switch(choice)
+                {
+                    case 1:  manageItemStorage(); break;
+                    case 2:  manageItemPrice(); break;
+                    case 3:  showMenu();
+                }
+            }
+        }
+
+    private manageItemStorage() {
+            // TODO:
+        }
+
+    private manageItemPrice () {
+            // TODO
+        }
+
+    private displayItemInfo() {
+            // TODO
+        }
+
+    private manageMembership(){
+            // TODO:
+        }
+    private manageDeal(){
+            //TODO
+        }
+    private getReport(){
+            // TODO
+        }
     }
-    private void manageMembership(){
-        // TODO:
-    }
-    private void manageDeal(){
-        //TODO
-    }
-    private void getReport(){
-        // TODO
-    }
-}
