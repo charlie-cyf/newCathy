@@ -38,11 +38,11 @@ insert into Offer (dealName, branchNumber) values ('Christmas Sale', 2);
 insert into Offer (dealName, branchNumber) values ('Christmas Sale', 3);
 insert into Offer (dealName, branchNumber) values ('Christmas Sale', 5);
 
-insert into ItemsInDeal (itemId, dealName, percentage) values (0745, 'Christmas Sale', 0.5);
-insert into ItemsInDeal (itemId, dealName, percentage) values (0747, 'Spring Sale', 0.2);
-insert into ItemsInDeal (itemId, dealName, percentage) values (0744, 'Spring Sale', 0.25);
-insert into ItemsInDeal (itemId, dealName, percentage) values (0745, 'Summer Sale', 0.10);
-insert into ItemsInDeal (itemId, dealName, percentage) values (0748, 'Summer Sale', 0.30);
+insert into ItemsInDeal (itemID, dealName, percentage) values (0745, 'Christmas Sale', 0.5);
+insert into ItemsInDeal (itemID, dealName, percentage) values (0747, 'Spring Sale', 0.2);
+insert into ItemsInDeal (itemID, dealName, percentage) values (0744, 'Spring Sale', 0.25);
+insert into ItemsInDeal (itemID, dealName, percentage) values (0745, 'Summer Sale', 0.10);
+insert into ItemsInDeal (itemID, dealName, percentage) values (0748, 'Summer Sale', 0.30);
 
 insert into MemberShip (memberID, name, phone, points) values (1270, 'Aurelie Dibb', '266-901-5451', 28);
 insert into MemberShip (memberID, name, phone, points) values (1349, 'Ingunna Tytherton', '563-282-7211', 68);
@@ -64,5 +64,15 @@ insert into MemberPurchase (receiptNumber, memberID) values (3120, 1088);
 insert into MemberPurchase (receiptNumber, memberID) values (3051, 1023);
 insert into MemberPurchase (receiptNumber, memberID) values (3304, 1023);
 insert into MemberPurchase (receiptNumber, memberID) values (3165, 1055);
+
+insert into Storage (itemId, branchNumber, amount) values (0744, 1, 150);
+insert into Storage (itemId, branchNumber, amount) values (0745, 1, 200);
+insert into Storage (itemId, branchNumber, amount) values (0745, 2, 1500);
+insert into Storage (itemId, branchNumber, amount) values (0746, 1, 176);
+insert into Storage (itemId, branchNumber, amount) values (0747, 1, 45);
+insert into Storage (itemId, branchNumber, amount) values (0747, 3, 32);
+insert into Storage (itemId, branchNumber, amount) values (0748, 1, 160);
+insert into Storage (itemId, branchNumber, amount) values (0748, 5, 1503);
+
 
 commit;
