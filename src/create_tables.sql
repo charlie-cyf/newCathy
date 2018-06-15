@@ -49,7 +49,7 @@ CREATE TABLE Storage (
 	FOREIGN KEY (branchNumber) REFERENCES Branch
 		ON DELETE CASCADE
 );
-
+ 
 grant select on Storage to public;
 
 CREATE TABLE Deal (
