@@ -1,6 +1,6 @@
 import java.sql.*;
 import java.io.*;
-public class Employee extends Controller {
+public class Employee extends controller {
     private int id;
     private int branch;
 
@@ -60,7 +60,7 @@ public class Employee extends Controller {
         }
     }
 
-    private void validateID() {
+    public void validateID() {
         int eid;
         PreparedStatement ps;
         ResultSet rs;
