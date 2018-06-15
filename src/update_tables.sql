@@ -65,4 +65,14 @@ insert into MemberPurchase (receiptNumber, memberID) values (3051, 1023);
 insert into MemberPurchase (receiptNumber, memberID) values (3304, 1023);
 insert into MemberPurchase (receiptNumber, memberID) values (3165, 1055);
 
+insert into ItemStorage (itemId, branchNumber, amount) values (0744, 1, 150);
+insert into ItemStorage (itemId, branchNumber, amount) values (0745, 1, 200);
+insert into ItemStorage (itemId, branchNumber, amount) values (0745, 2, 1500);
+insert into ItemStorage (itemId, branchNumber, amount) values (0746, 1, 176);
+insert into ItemStorage (itemId, branchNumber, amount) values (0747, 1, 45);
+insert into ItemStorage (itemId, branchNumber, amount) values (0747, 3, 32);
+insert into ItemStorage (itemId, branchNumber, amount) values (0748, 1, 160);
+insert into ItemStorage (itemId, branchNumber, amount) values (0748, 5, 1503);
+
+
 commit;
