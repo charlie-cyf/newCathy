@@ -26,7 +26,7 @@ public class Manager extends Controller{
                     id = input;
                     ps = con.prepareStatement("SELECT * FROM Clerk WHERE clerkID = ? AND type = 'Manager'");
                     ps.setInt(1, id);
-                    
+
 
                     rs = ps.executeQuery("SELECT * FROM Clerk WHERE clerkID = ? AND type = 'Manager'");
 
