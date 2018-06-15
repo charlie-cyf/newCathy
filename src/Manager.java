@@ -4,7 +4,7 @@ import java.sql.*;
 // for reading from the command line
 import java.io.*;
 
-public class Manager extends Controller{
+public class Manager extends controller{
 
     private int managerID;
     private int branch;

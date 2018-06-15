@@ -11,7 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class Controller implements ActionListener {
+public class controller implements ActionListener {
     // command line reader
     protected BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
@@ -226,6 +226,6 @@ public class Controller implements ActionListener {
 
     public static void main (String args[])
     {
-        Controller c = new Controller();
+        controller c = new controller();
     }
 }

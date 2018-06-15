@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 
-public class Member extends Controller {
+public class Member extends controller {
     int memID;
 
     public void memberShowMenu() {
@@ -24,8 +24,6 @@ public class Member extends Controller {
         quit = false;
 
         try {
-
-
             while (!quit) {
                 checkPoint();
 
