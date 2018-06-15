@@ -26,7 +26,6 @@ public class Member extends controller {
 
         try {
             while (!quit) {
-                checkPoint();
 
                 System.out.print("\n\nPlease choose one of the following: \n");
                 System.out.print("1.  Check another membership point\n");
@@ -68,30 +67,21 @@ public class Member extends controller {
 
         while (!enterSucc) {
             String memName = null;
-            String point = null;
+            int point = 0;
             try {
                 System.out.println("please enter membership id. ");
                 enteredID = Integer.parseInt(in.readLine());
                 statement = con.createStatement();
-                result = statement.executeQuery("SELECT memberID, name FROM Membership WHERE memberID = " + enteredID);
-                if (result != null)
-                    enterSucc = true;
-                else {
-                    System.out.println("invalid membership id! ");
-                    System.out.println("enter 1 to exit");
-                    System.out.println("enter 2 to try again");
-                    int exitMem = Integer.parseInt(in.readLine());
-                    if (exitMem == 1) {
-                        System.out.println("GoodBye!");
-                        System.exit(0);
-                    }
-                }
+                result = statement.executeQuery("SELECT * FROM Membership WHERE memberID = " + enteredID);
+                result.next();
+                result.getInt("memberID");
+                enterSucc = true;
 
 
-                while (result.next()) {
+
                     memName = result.getString("name");
-                    point = result.getString("points");
-                }
+                    point = result.getInt("points");
+
 
             } catch (IOException e) {
                 System.out.println("IOException!");
@@ -104,6 +94,20 @@ public class Member extends controller {
                 }
             } catch (SQLException ex) {
                 System.out.println("Message: " + ex.getMessage());
+                enterSucc = false;
+                System.out.println("invalid membership id! ");
+                System.out.println("enter 1 to exit");
+                System.out.println("enter 2 to try again");
+                try {
+                    int exitMem = Integer.parseInt(in.readLine());
+                    if (exitMem == 1) {
+                        System.out.println("GoodBye!");
+                        System.exit(0);
+                    }
+                } catch (IOException ie) {
+                    System.out.println("io exception " + ie.getMessage());
+                }
+
             }
 
 
