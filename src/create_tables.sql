@@ -1,7 +1,7 @@
 drop table Item CASCADE constraints;
 drop table Branch CASCADE constraints;
 drop table Clerk CASCADE constraints;
-drop table ItemStorage;
+drop table Storage;
 drop table Deal CASCADE constraints;
 drop table ItemsInPurchase;
 drop table Offer;
@@ -39,7 +39,7 @@ CREATE TABLE Clerk (
 
 grant select on Clerk to public;
 
-CREATE TABLE ItemStorage (
+CREATE TABLE Storage (
 	itemID INTEGER,
 	branchNumber INTEGER NOT NULL,
 	amount INTEGER,
@@ -52,7 +52,7 @@ CREATE TABLE ItemStorage (
 
 
 
-grant select on ItemStorage to public;
+grant select on Storage to public;
 
 CREATE TABLE Deal (
 	dealName CHAR(20) PRIMARY KEY,
