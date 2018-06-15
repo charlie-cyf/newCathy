@@ -76,11 +76,8 @@ public class Member extends controller {
                 result.next();
                 result.getInt("memberID");
                 enterSucc = true;
-
-
-
-                    memName = result.getString("name");
-                    point = result.getInt("points");
+                memName = result.getString("name");
+                point = result.getInt("points");
 
 
             } catch (IOException e) {
