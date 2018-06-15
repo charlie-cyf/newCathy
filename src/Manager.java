@@ -176,16 +176,170 @@ public class Manager extends controller{
     }
 
     private void manageItemStorage() {
-            // TODO:
+        int                id;
+        int             amount;
+        PreparedStatement  ps;
+        try {
+            ps = con.prepareStatement("UPDATE Storage SET amount = ? WHERE itemID = ?");
+
+            System.out.print("\nItem ID: ");
+            id = Integer.parseInt(in.readLine());
+            //displayItemInfo(id);
+            ps.setInt(2, id);
+
+            System.out.print("\nSet new amount: ");
+            amount = Integer.parseInt(in.readLine());
+            while (amount < 0) {
+                System.out.print("\nAmount cannot be negative, please try again: ");
+                amount = Integer.parseInt(in.readLine());
+            }
+            ps.setInt(1, amount);
+
+            int rowCount = ps.executeUpdate();
+            if (rowCount == 0) {
+                System.out.println("\nItem " + id + " does not exist!");
+            }
+
+            con.commit();
+
+            ps.close();
+        } catch (IOException e) {
+            System.out.println("IOException!");
+        } catch (SQLException ex) {
+            System.out.println("Message: " + ex.getMessage());
+
+            try {
+                con.rollback();
+            } catch (SQLException ex2) {
+                System.out.println("Message: " + ex2.getMessage());
+                System.exit(-1);
+            }
+        }
     }
 
     private void manageItemPrice () {
-            // TODO
+        int                id;
+        double                price;
+        PreparedStatement  ps;
+        try {
+            ps = con.prepareStatement("UPDATE Item SET price = ? WHERE itemID = ?");
+
+            System.out.print("\nItem ID: ");
+            id = Integer.parseInt(in.readLine());
+            displayItemInfo(id);
+            ps.setInt(2, id);
+
+            System.out.print("\nSet new price: ");
+            price = Double.parseDouble(in.readLine());
+            while (price < 0) {
+                System.out.print("\nPrice cannot be negative, please try again: ");
+                price = Double.parseDouble(in.readLine());
+            }
+            ps.setDouble(1, price);
+
+            int rowCount = ps.executeUpdate();
+            if (rowCount == 0) {
+                System.out.println("\nItem " + id + " does not exist!");
+            }
+
+            con.commit();
+
+            ps.close();
+        } catch (IOException e) {
+            System.out.println("IOException!");
+        } catch (SQLException ex) {
+            System.out.println("Message: " + ex.getMessage());
+
+            try {
+                con.rollback();
+            } catch (SQLException ex2) {
+                System.out.println("Message: " + ex2.getMessage());
+                System.exit(-1);
+            }
+        }
     }
 
-    private void displayItemInfo() {
-            // TODO
+
+    private void displayItemInfo(int itemID)
+    {
+        String     iname;
+        int        id = itemID;
+        Double     price;
+        String     itype;
+        Statement  stmt;
+        ResultSet  rs;
+
+        try
+        {
+            stmt = con.createStatement();
+
+            rs = stmt.executeQuery("SELECT * FROM Item WHRER itemID = id");
+
+            // get info on ResultSet
+            ResultSetMetaData rsmd = rs.getMetaData();
+
+
+
+            // get number of columns
+            int numCols = rsmd.getColumnCount();
+
+            System.out.println(" ");
+
+            // display column names;
+            for (int i = 0; i < numCols; i++)
+            {
+                // get column name and print it
+
+                System.out.printf("%-15s", rsmd.getColumnName(i+1));
+            }
+
+            System.out.println(" ");
+
+            while(rs.next())
+            {
+                // for display purposes get everything from Oracle
+                // as a string
+
+                // simplified output formatting; truncation may occur
+
+                id = rs.getInt("itemID");
+                System.out.printf("%-10.10s", id);
+
+                iname = rs.getString("name");
+                System.out.printf("%-20.20s", iname);
+
+                itype = rs.getString("type");
+                if (rs.wasNull())
+                {
+                    System.out.printf("%-20.20s", " ");
+                }
+                else
+                {
+                    System.out.printf("%-20.20s", itype);
+                }
+
+
+                price = rs.getDouble("price");
+                if (rs.wasNull())
+                {
+                    System.out.printf("%-15.15s\n", " ");
+                }
+                else
+                {
+                    System.out.printf("%-15.15s\n", price);
+                }
+            }
+
+            // close the statement;
+            // the ResultSet will also be closed
+            stmt.close();
+        }
+        catch (SQLException ex)
+        {
+            System.out.println("Message: " + ex.getMessage());
+        }
     }
+
 
     private void manageMembership(){
             // TODO:
@@ -194,6 +348,92 @@ public class Manager extends controller{
             //TODO
     }
     private void getReport(){
-            // TODO
+//        String     bid;
+//        String     bname;
+//        String     baddr;
+//        String     bcity;
+//        String     bphone;
+//        Statement  stmt;
+//        ResultSet  rs;
+//
+//        int receiptNumber;
+//        String purchaseTime;
+//        String purchaseDate;
+//        double totalPrice;
+//        int clerkID;
+//        int branchNumber;
+//        Statement  stmt;
+//        ResultSet  rs;
+//
+//        try
+//        {
+//            stmt = con.createStatement();
+//
+//            rs = stmt.executeQuery("SELECT * FROM Purchase WHERE ? > ");
+//
+//            // get info on ResultSet
+//            ResultSetMetaData rsmd = rs.getMetaData();
+//
+//            // get number of columns
+//            int numCols = rsmd.getColumnCount();
+//
+//            System.out.println(" ");
+//
+//            // display column names;
+//            for (int i = 0; i < numCols; i++)
+//            {
+//                // get column name and print it
+//
+//                System.out.printf("%-15s", rsmd.getColumnName(i+1));
+//            }
+//
+//            System.out.println(" ");
+//
+//            while(rs.next())
+//            {
+//                // for display purposes get everything from Oracle
+//                // as a string
+//
+//                // simplified output formatting; truncation may occur
+//
+//                bid = rs.getString("branch_id");
+//                System.out.printf("%-10.10s", bid);
+//
+//                bname = rs.getString("branch_name");
+//                System.out.printf("%-20.20s", bname);
+//
+//                baddr = rs.getString("branch_addr");
+//                if (rs.wasNull())
+//                {
+//                    System.out.printf("%-20.20s", " ");
+//                }
+//                else
+//                {
+//                    System.out.printf("%-20.20s", baddr);
+//                }
+//
+//                bcity = rs.getString("branch_city");
+//                System.out.printf("%-15.15s", bcity);
+//
+//                bphone = rs.getString("branch_phone");
+//                if (rs.wasNull())
+//                {
+//                    System.out.printf("%-15.15s\n", " ");
+//                }
+//                else
+//                {
+//                    System.out.printf("%-15.15s\n", bphone);
+//                }
+//            }
+//
+//            // close the statement;
+//            // the ResultSet will also be closed
+//            stmt.close();
+//        }
+//        catch (SQLException ex)
+//        {
+//            System.out.println("Message: " + ex.getMessage());
+//        }
     }
 }
+
