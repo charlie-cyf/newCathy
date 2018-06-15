@@ -9,10 +9,11 @@ import java.awt.*;
 import java.awt.event.*;
 
 
-public class Member extends Controller {
+public class Member extends controller {
     int memID;
 
     public void memberShowMenu() {
+        connect("ora_a1q1b", "a24581167");
 
         //enter system
         checkPoint();
@@ -24,8 +25,6 @@ public class Member extends Controller {
         quit = false;
 
         try {
-
-
             while (!quit) {
                 checkPoint();
 

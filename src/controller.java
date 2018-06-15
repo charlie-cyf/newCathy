@@ -11,7 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class Controller implements ActionListener {
+public class controller implements ActionListener {
     // command line reader
     protected BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
@@ -29,7 +29,7 @@ public class Controller implements ActionListener {
     /*
      * constructs login window and loads JDBC driver
      */
-    public Controller() {
+    public controller() {
         mainFrame = new JFrame("User Login");
 
         JLabel usernameLabel = new JLabel("Enter username: ");
@@ -122,7 +122,7 @@ public class Controller implements ActionListener {
     /*
      * connects to Oracle database named ug using user supplied username and password
      */
-    private boolean connect(String username, String password) {
+    public boolean connect(String username, String password) {
         String connectURL = "jdbc:oracle:thin:@dbhost.ugrad.cs.ubc.ca:1522:ug";
 
         try {
@@ -141,7 +141,9 @@ public class Controller implements ActionListener {
      * event handler for login window
      */
     public void actionPerformed(ActionEvent e) {
-        if (connect(usernameField.getText(), String.valueOf(passwordField.getPassword()))) {
+       // if (connect(usernameField.getText(), String.valueOf(passwordField.getPassword()))) {
+        if (connect("ora_a1q1b", "a24581167")) {
+
             // if the username and password are valid,
             // remove the login window and display a text menu
             mainFrame.dispose();
@@ -161,6 +163,7 @@ public class Controller implements ActionListener {
     }
     private void showMenu()
     {
+        //System.out.println(con == null);
         int choice;
         boolean quit;
 
@@ -185,11 +188,15 @@ public class Controller implements ActionListener {
 
                 switch(choice)
                 {
-                    case 1:  //insertItem(); //TODO
+                    case 1:
+                        Manager m = new Manager();
+                        m.validateID();
                         break;
                     case 2:  //deleteItem();
                         break;
-                    case 3:  //updateItemPrice();
+                    case 3:
+                        Member mem = new Member();
+                        mem.memberShowMenu();
                         break;
                     case 4:  quit = true;
                 }
@@ -222,6 +229,6 @@ public class Controller implements ActionListener {
 
     public static void main (String args[])
     {
-        Controller c = new Controller();
+        controller c = new controller();
     }
 }

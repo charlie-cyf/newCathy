@@ -4,18 +4,19 @@ import java.sql.*;
 // for reading from the command line
 import java.io.*;
 
-public class Manager extends Controller{
+public class Manager extends controller{
 
     private int managerID;
     private int branch;
 
-    private void validateID () {
+    public void validateID () {
         int               input;
         int               id;
         boolean           quit = false;
         ResultSet         rs;
         PreparedStatement ps;
 
+        System.out.println(connect("ora_a1q1b", "a24581167"));
         try {
             while (!quit) {
                 System.out.print("\n\nPlease enter your manager id or press enter 0 to quit: \n");
@@ -28,9 +29,9 @@ public class Manager extends Controller{
                     ps.setInt(1, id);
 
 
-                    rs = ps.executeQuery("SELECT * FROM Clerk WHERE clerkID = ? AND type = 'Manager'");
+                    rs = ps.executeQuery();
 
-                    if (rs != null) {
+                    if (rs.next()) {
                         System.out.print("Access granted: Welcome.");
                         managerID = id;
                         showMenu();
