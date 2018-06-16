@@ -1,5 +1,6 @@
-
-public class Employee extends Controller {
+import java.sql.*;
+import java.io.*;
+public class Employee extends controller {
     private int id;
     private int branch;
 
@@ -9,49 +10,57 @@ public class Employee extends Controller {
     public void employeeShowMenu() {
         int choice;
         boolean quit = false;
+        try {
+            while (!quit) {
+                System.out.print("\n\nPlease choose one of the following: \n");
+                System.out.print("1.  processPurchase\n");
+                System.out.print("2.  manageMembership\n");
+                System.out.print("3.  Quit\n");
+                choice = Integer.parseInt(in.readLine());
 
-        while (!quit) {
-            System.out.print("\n\nPlease choose one of the following: \n");
-            System.out.print("1.  processPurchase\n");
-            System.out.print("2.  manageMembership\n");
-            System.out.print("3.  Quit\n");
+                System.out.println(" ");
 
-            choice = Integer.parseInt(in.readLine());
-
-            System.out.println(" ");
-
-            switch (choice) {
-                case 1:
-                    processPurchase();
-                    break;
-                case 2:
-                    manageMemberShip();
-                    break;
-                case 3:
-                    quit = true;
+                switch (choice) {
+                    case 1:
+                        processPurchase();
+                        break;
+                    case 2:
+                        manageMemberShip();
+                        break;
+                    case 3:
+                        quit = true;
+                }
             }
+        }catch (IOException e){
+            System.out.println("IOException!");
         }
     }
 
     private void manageMemberShip() {
-        // TODO
         String name;
         String phone;
         int point;
-        System.out.print("\nplease Enter Member name : \n");
-        name = in.readLine();
-        System.out.print("\nplease Enter Member phone number : \n");
-        phone = in.readLine();
+        try {
+            System.out.print("\nplease Enter Member name : \n");
+            name = in.readLine();
+            System.out.print("\nplease Enter Member phone number : \n");
+            phone = in.readLine();
+        }catch(IOException e){
+            System.out.println("IOException!");
+        }
     }
 
     private void processPurchase() {
-        // TODO
         int id;
-        System.out.print("\nplease Enter item ID: \n");
-        id = Integer.parseInt(in.readLine());
+        try {
+            System.out.print("\nplease Enter item ID: \n");
+            id = Integer.parseInt(in.readLine());
+        }catch (IOException e) {
+            System.out.println("IOException!");
+        }
     }
 
-    private void validateID() {
+    public void validateID() {
         int eid;
         PreparedStatement ps;
         ResultSet rs;
@@ -89,4 +98,3 @@ public class Employee extends Controller {
         employeeShowMenu();
 
     }
-}
