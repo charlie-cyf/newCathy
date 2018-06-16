@@ -37,6 +37,7 @@ public class Manager extends controller{
 
                         branch = rs.getInt("branchNumber");
 
+
                         showMenu();
                     } else {
                         System.out.print("Access denied: Invalid manager ID.");
