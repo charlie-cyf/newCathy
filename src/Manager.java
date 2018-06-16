@@ -234,7 +234,7 @@ public class Manager extends controller{
                         manageItemStorage();
                         break;
                     case 2:
-                        manageItemPrice();
+                        //manageItemPrice();
                         break;
                     case 3:
                         showMenu();
@@ -274,6 +274,8 @@ public class Manager extends controller{
 
 
             con.commit();
+        }catch (IOException | SQLException e){
+            //haha
         }
     }
 
@@ -476,7 +478,7 @@ public class Manager extends controller{
         // TODO: check duration valid
         return true;
     }
-    private void addNewDeal(){
+    private void addNewDeal() {
         String dealName = null;
         String dur;
 
@@ -484,11 +486,10 @@ public class Manager extends controller{
         double percent;
 
         boolean canExit = false;
-        PreparedStatement  ps;
+        PreparedStatement ps;
 
-        while (!canExit){
-            try
-            {
+        while (!canExit) {
+            try {
                 ps = con.prepareStatement("INSERT INTO Deal VALUES (?,?)");
                 System.out.print("\nDeal name: ");
                 dealName = in.readLine();
@@ -496,45 +497,38 @@ public class Manager extends controller{
                 System.out.print("\nDuration: ");
                 dur = in.readLine();
                 ps.setString(2, dur);
-                while (!checkValidDur(dur)){
+                while (!checkValidDur(dur)) {
                     System.out.println("invalid duration format, please try again.");
                     dur = in.readLine();
                 }
                 ps.executeUpdate();
                 // ps.close();
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 System.out.println("IOException!");
-            }
-            catch (SQLException ex)
-            {
+            } catch (SQLException ex) {
                 System.out.println("Message: " + ex.getMessage());
                 System.out.println("Insertion failed!");
-                try
-                {
+                try {
                     // undo the insert
                     con.rollback();
                     System.exit(-1);
-                }
-                catch (SQLException ex2)
-                {
+                } catch (SQLException ex2) {
                     System.out.println("Message: " + ex2.getMessage());
                     System.exit(-1);
                 }
             }
 
-            try{
+            try {
                 System.out.println("Do you want to add item in this deal? enter Y for yes");
                 String ans = in.readLine();
-                if(ans.equals("Y") || ans.equals("y")){
+                if (ans.equals("Y") || ans.equals("y")) {
                     System.out.print("please enter item id: ");
                     itemID = Integer.parseInt(in.readLine());
                     Statement s = con.createStatement();
                     ResultSet res = s.executeQuery("SELECT * FROM Item WHERE itemID = " + itemID);
-                    if(!res.next()){
+                    if (!res.next()) {
                         System.out.println("no such item please try again! ");
-                    }else {
+                    } else {
                         System.out.println("item found, please enter persentage");
                         percent = Double.parseDouble(in.readLine());
                         ps = con.prepareStatement("INSERT INTO ItemsInDeal VALUES (?,?,?)");
@@ -549,9 +543,9 @@ public class Manager extends controller{
                 }
                 System.out.println("do you want to add another deal? enter Y for yes");
                 canExit = !in.readLine().equals("Y");
-            }catch (SQLException se) {
+            } catch (SQLException se) {
                 // TODO
-            } catch (IOException ie){
+            } catch (IOException ie) {
                 System.out.println("IOException!");
                 try {
                     con.close();
@@ -562,6 +556,7 @@ public class Manager extends controller{
             }
 
         }
+    }
 
     private void getReport() {
 
@@ -582,8 +577,6 @@ public class Manager extends controller{
         double totalPrice;
         int clerkID;
         int branchNumber;
-        Statement  stmt;
-        ResultSet  rs;
 
         try
         {
@@ -665,22 +658,12 @@ public class Manager extends controller{
         return month1 < month2 && day1 < day2;
       }
 
-    private void manageMembership(){
-        // TODO:
-    }
-    private void manageDeal(){
-        //TODO
-    }
 
     private void addDeal() {
         // TODO
     }
 
     private void deleteDeal() {
-        // TODO
-    }
-
-    private void showAllDeals() {
         // TODO
     }
 
