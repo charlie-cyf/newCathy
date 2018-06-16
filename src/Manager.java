@@ -83,7 +83,7 @@ public class Manager extends controller{
                         break;
                     case 2:
                         manageItem();
-                        break;  
+                        break;
                     case 3:
                         manageMembership();
                         break;
