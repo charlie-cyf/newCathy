@@ -9,7 +9,8 @@ public class Employee extends controller {
     public Employee() {
     }
 
-    
+
+
     public void employeeShowMenu() {
         int choice;
         boolean quit = false;
@@ -42,6 +43,7 @@ public class Employee extends controller {
     private void manageMemberShip() {
         String name;
         String phone;
+
         PreparedStatement ps;
         ResultSet rs;
         int id = 0;
@@ -90,6 +92,7 @@ public class Employee extends controller {
             }
             System.out.println("Message: " + ex.getMessage());
         }
+
     }
 
     private void processPurchase() {
@@ -107,6 +110,7 @@ public class Employee extends controller {
         PreparedStatement ps;
         ResultSet rs;
         boolean quit = false;
+
 
             try {
                 String connectURL = "jdbc:oracle:thin:@dbhost.ugrad.cs.ubc.ca:1522:ug";
@@ -131,6 +135,7 @@ public class Employee extends controller {
                     ps.close();
                 }
 
+
             } catch (IOException e) {
                 System.out.println("IOException!");
             } catch (SQLException ex) {
@@ -142,5 +147,6 @@ public class Employee extends controller {
 
         employeeShowMenu();
     }
+
 
     }
