@@ -406,10 +406,11 @@ public class Manager extends controller{
         boolean acc = false;
         String dealName = null;
         while (!acc){
-            System.out.print("ItemID: ");
+            System.out.print("dealName: ");
             dealName = in.readLine();
-            Statement s = con.createStatement();
-            ResultSet res = s.executeQuery("SELECT * FROM Deal WHERE dealName = " + dealName);
+            Statement s = con.prepareStatement("SELECT * FROM Deal WHERE dealName = ?");
+            s.setString(1, dealName);
+            ResultSet res = s.executeQuery();
             if(!res.next()) {
                 System.out.println("no such deal please try again! ");
             } else {
@@ -434,8 +435,6 @@ public class Manager extends controller{
         try
         {
             stmt = con.createStatement();
-
-            rs = stmt.executeQuery("SELECT * FROM Item WHRER itemID = id");
 
             rs = stmt.executeQuery("SELECT d.dealName AS dealName, d.duration as duration, id.itemId as itemId, id.percentage as persentage FROM Deal d, ItemsInDeal id WHERE d.dealName = id.dealName");
             // get info on ResultSet
