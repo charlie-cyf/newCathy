@@ -381,6 +381,7 @@ public class Manager extends controller{
         con.commit();
         ps.close();
     }
+
     private int searchItem() throws IOException, SQLException{
         boolean acc = false;
         int itemID = 0;
