@@ -372,7 +372,7 @@ public class Manager extends controller{
         String  dealName = searchDeal();
         System.out.println("please enter percentage ");
         double persent = Double.parseDouble(in.readLine());
-        PreparedStatement ps = con.prepareStatement("INSERT INTO Deal VALUES (?,?,?)");
+        PreparedStatement ps = con.prepareStatement("INSERT INTO ItemsInDeal VALUES (?,?,?)");
         ps.setInt(1,itemID);
         ps.setString(2,dealName);
         ps.setDouble(3, persent);
@@ -394,7 +394,6 @@ public class Manager extends controller{
             } else {
                 acc = true;
                 return itemID;
-
             }
 
         }
@@ -405,12 +404,14 @@ public class Manager extends controller{
     private String searchDeal() throws IOException, SQLException {
         boolean acc = false;
         String dealName = null;
+        PreparedStatement s;
         while (!acc){
             System.out.print("dealName: ");
             dealName = in.readLine();
-            Statement s = con.prepareStatement("SELECT * FROM Deal WHERE dealName = ?");
-            s.setString(1, dealName);
-            ResultSet res = s.executeQuery();
+            System.out.println("deal name "+ dealName);
+            s = con.prepareStatement("SELECT * FROM Deal WHERE dealName = \'"+dealName+"\'");
+           // s.setString(1, dealName);
+            ResultSet res= s.executeQuery();
             if(!res.next()) {
                 System.out.println("no such deal please try again! ");
             } else {
@@ -418,10 +419,8 @@ public class Manager extends controller{
                 return dealName;
 
             }
-
         }
         return  dealName;
-
     }
 
     private void showAllDeals(){
