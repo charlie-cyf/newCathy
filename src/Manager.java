@@ -28,12 +28,13 @@ public class Manager extends controller{
                     ps = con.prepareStatement("SELECT * FROM Clerk WHERE clerkID = ? AND type = 'Manager'");
                     ps.setInt(1, 1252);
 
-
                     rs = ps.executeQuery();
                     if (rs.next()) {
                         System.out.print("Access granted: Welcome.");
                         managerID = id;
+
                         branch = rs.getInt("branchNumber");
+
                         showMenu();
                         quit = true;
                     } else {
@@ -68,12 +69,13 @@ public class Manager extends controller{
         try {
             while (!quit) {
                 System.out.print("\n");
-                System.out.print("1.  Manage employee\n");
-                System.out.print("2.  Manage item\n");
-                System.out.print("3.  Manage membership\n");
-                System.out.print("4.  Manage deal\n");
-                System.out.print("5.  Generate transaction report\n");
-                System.out.print("6.  Quit\n>> ");
+                System.out.print("1.  Show all employees\n");
+                System.out.print("2.  Manage employee\n");
+                System.out.print("3.  Manage item\n");
+                System.out.print("4.  Manage membership\n");
+                System.out.print("5.  Manage deal\n");
+                System.out.print("6.  Generate report\n");
+                System.out.print("7.  Quit\n>> ");
 
                 choice = Integer.parseInt(in.readLine());
 
@@ -81,21 +83,24 @@ public class Manager extends controller{
 
                 switch (choice) {
                     case 1:
-                        manageEmployeeWage();
+                        showAllEmployees();
                         break;
                     case 2:
-                        manageItem();
+                        manageEmployeeWage();
                         break;
                     case 3:
-                        manageMembership();
+                        manageItem();
                         break;
                     case 4:
-                        manageDeal();
+                        manageMembership();
                         break;
                     case 5:
-                        getReport();
+                        manageDeal();
                         break;
                     case 6:
+                        getReport();
+                        break;
+                    case 7:
                         quit = true;
                         System.exit(0);
                 }
@@ -147,6 +152,67 @@ public class Manager extends controller{
         }
     }
 
+    private void showAllEmployees()
+    {
+        int     clerkID;
+        String     name;
+        String     type;
+        int        wage;
+        int        branchNumber;
+        Statement  stmt;
+        ResultSet  rs;
+
+        try
+        {
+            stmt = con.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM Clerk");
+
+            // get info on ResultSet
+            ResultSetMetaData rsmd = rs.getMetaData();
+
+            // get number of columns
+            int numCols = rsmd.getColumnCount();
+
+            System.out.println(" ");
+
+            // display column names;
+            for (int i = 0; i < numCols; i++)
+            {
+                // get column name and print it
+                System.out.printf("%-15s", rsmd.getColumnName(i+1));
+            }
+
+            System.out.println(" ");
+
+            while(rs.next())
+            {
+                // simplified output formatting; truncation may occur
+                clerkID = rs.getInt("clerkID");
+                System.out.printf("%-5s", clerkID);
+
+                name = rs.getString("name");
+                System.out.printf("%-5s", name);
+
+                wage = rs.getInt("wage");
+                System.out.printf("%-5s\n", wage);
+
+                branchNumber = rs.getInt("branchNumber");
+                System.out.printf("%-5s", branchNumber);
+
+                type = rs.getString("type");
+                System.out.printf("%-5s", type);
+            }
+            // close the statement;
+            // the ResultSet will also be closed
+            stmt.close();
+        }
+        catch (SQLException ex)
+        {
+            System.out.println("Message: " + ex.getMessage());
+        }
+    }
+
+
     private void manageItem(){
 
         int     choice;
@@ -184,25 +250,28 @@ public class Manager extends controller{
         int             amount;
         PreparedStatement  ps;
         try {
-            ps = con.prepareStatement("UPDATE ItemStorage SET amount = ? WHERE itemID = ? AND branchNumber = ?");
 
+            ps = con.prepareStatement("UPDATE Storage SET amount = ? WHERE itemID = ? AND branchNumber = ?");
             System.out.print("\nItem ID: ");
             id = Integer.parseInt(in.readLine());
-            //displayItemInfo(id);
+
             ps.setInt(2, id);
             ps.setInt(3, branch);
 
             System.out.print("\nSet new storage amount: ");
             amount = Integer.parseInt(in.readLine());
             while (amount < 0) {
-                System.out.print("\nPrice cannot be negative, please try again: ");
+                System.out.print("\nStorage cannot be negative, please try again: ");
                 amount = Integer.parseInt(in.readLine());
             }
             ps.setInt(1, amount);
+
+
             int rowCount = ps.executeUpdate();
             if (rowCount == 0) {
-                System.out.println("\nItem " + id + " does not exist!");
+                System.out.println("\nStorage of item ID " + id + " does not exist in your branch!");
             }
+
 
             con.commit();
 
@@ -262,6 +331,9 @@ public class Manager extends controller{
         }
     }
 
+    private void showItems() {
+        // TODO
+    }
 
     private void displayItemInfo(int itemID)
     {
@@ -276,7 +348,7 @@ public class Manager extends controller{
         {
             stmt = con.createStatement();
 
-            rs = stmt.executeQuery("SELECT * FROM Item WHRER itemID = id WHERE branchNumber = ?");
+            rs = stmt.executeQuery("SELECT * FROM Item WHRER itemID = id");
 
             // get info on ResultSet
             ResultSetMetaData rsmd = rs.getMetaData();
@@ -343,6 +415,107 @@ public class Manager extends controller{
         }
     }
 
+    private void getReport() {
+
+    }
+
+    private void getSalesRecord(){
+        String     bid;
+        String     bname;
+        String     baddr;
+        String     bcity;
+        String     bphone;
+        Statement  stmt;
+        ResultSet  rs;
+
+        int receiptNumber;
+        String purchaseTime;
+        String purchaseDate;
+        double totalPrice;
+        int clerkID;
+        int branchNumber;
+        Statement  stmt;
+        ResultSet  rs;
+
+        try
+        {
+            stmt = con.createStatement();
+
+            rs = stmt.executeQuery("SELECT * FROM Purchase WHERE isEarlier() ");
+
+            // get info on ResultSet
+            ResultSetMetaData rsmd = rs.getMetaData();
+
+            // get number of columns
+            int numCols = rsmd.getColumnCount();
+
+            System.out.println(" ");
+
+            // display column names;
+            for (int i = 0; i < numCols; i++)
+            {
+                // get column name and print it
+
+                System.out.printf("%-15s", rsmd.getColumnName(i+1));
+            }
+
+            System.out.println(" ");
+
+            while(rs.next())
+            {
+                // for display purposes get everything from Oracle
+                // as a string
+
+                // simplified output formatting; truncation may occur
+
+                bid = rs.getString("branch_id");
+                System.out.printf("%-10.10s", bid);
+
+                bname = rs.getString("branch_name");
+                System.out.printf("%-20.20s", bname);
+
+                baddr = rs.getString("branch_addr");
+                if (rs.wasNull())
+                {
+                    System.out.printf("%-20.20s", " ");
+                }
+                else
+                {
+                    System.out.printf("%-20.20s", baddr);
+                }
+
+                bcity = rs.getString("branch_city");
+                System.out.printf("%-15.15s", bcity);
+
+                bphone = rs.getString("branch_phone");
+                if (rs.wasNull())
+                {
+                    System.out.printf("%-15.15s\n", " ");
+                }
+                else
+                {
+                    System.out.printf("%-15.15s\n", bphone);
+                }
+            }
+
+            // close the statement;
+            // the ResultSet will also be closed
+            stmt.close();
+        }
+        catch (SQLException ex)
+        {
+            System.out.println("Message: " + ex.getMessage());
+        }
+    }
+
+    private boolean isEarlier(String d1, String d2) {
+        int month1 = Integer.parseInt(d1.substring(0,2));
+        int month2 = Integer.parseInt(d2.substring(0,2));
+        int day1 = Integer.parseInt(d1.substring(3));
+        int day2 = Integer.parseInt(d2.substring(3));
+
+        return month1 < month2 && day1 < day2;
+      }
 
     private void manageMembership(){
         // TODO:
@@ -350,101 +523,17 @@ public class Manager extends controller{
     private void manageDeal(){
         //TODO
     }
-    private void getReport(){
-//        String     bid;
-//        String     bname;
-//        String     baddr;
-//        String     bcity;
-//        String     bphone;
-//        Statement  stmt;
-//        ResultSet  rs;
 
-//        int receiptNumber;
-//        String purchaseTime;
-//        String purchaseDate;
-//        double totalPrice;
-//        int clerkID;
-//        int branchNumber;
-//        Statement  stmt;
-//        ResultSet  rs;
-//
-//        try
-//        {
-//            stmt = con.createStatement();
-//
-//            rs = stmt.executeQuery("SELECT * FROM Purchase WHERE isEarlier() ");
-//
-//            // get info on ResultSet
-//            ResultSetMetaData rsmd = rs.getMetaData();
-//
-//            // get number of columns
-//            int numCols = rsmd.getColumnCount();
-//
-//            System.out.println(" ");
-//
-//            // display column names;
-//            for (int i = 0; i < numCols; i++)
-//            {
-//                // get column name and print it
-//
-//                System.out.printf("%-15s", rsmd.getColumnName(i+1));
-//            }
-//
-//            System.out.println(" ");
-//
-//            while(rs.next())
-//            {
-//                // for display purposes get everything from Oracle
-//                // as a string
-//
-//                // simplified output formatting; truncation may occur
-//
-//                bid = rs.getString("branch_id");
-//                System.out.printf("%-10.10s", bid);
-//
-//                bname = rs.getString("branch_name");
-//                System.out.printf("%-20.20s", bname);
-//
-//                baddr = rs.getString("branch_addr");
-//                if (rs.wasNull())
-//                {
-//                    System.out.printf("%-20.20s", " ");
-//                }
-//                else
-//                {
-//                    System.out.printf("%-20.20s", baddr);
-//                }
-//
-//                bcity = rs.getString("branch_city");
-//                System.out.printf("%-15.15s", bcity);
-//
-//                bphone = rs.getString("branch_phone");
-//                if (rs.wasNull())
-//                {
-//                    System.out.printf("%-15.15s\n", " ");
-//                }
-//                else
-//                {
-//                    System.out.printf("%-15.15s\n", bphone);
-//                }
-//            }
-//
-//            // close the statement;
-//            // the ResultSet will also be closed
-//            stmt.close();
-//        }
-//        catch (SQLException ex)
-//        {
-//            System.out.println("Message: " + ex.getMessage());
-//        }
-//    }
-//
-//    private boolean isEarlier(String d1, String d2) {
-//        int month1 = Integer.parseInt(d1.substring(0,2));
-//        int month2 = Integer.parseInt(d2.substring(0,2));
-//        int day1 = Integer.parseInt(d1.substring(3));
-//        int day2 = Integer.parseInt(d2.substring(3));
-//
-//        return month1 < month2 && day1 < day2;
-      }
+    private void addDeal() {
+        // TODO
+    }
+
+    private void deleteDeal() {
+        // TODO
+    }
+
+    private void showAllDeals() {
+        // TODO
+    }
+
 }
