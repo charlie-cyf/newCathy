@@ -13,11 +13,11 @@ import java.awt.event.*;
 
 /*
  * This class implements a graphical login window and a simple text
- * interface for interacting with the branch table 
- */ 
+ * interface for interacting with the branch table
+ */
 public class branch implements ActionListener
 {
-    // command line reader 
+    // command line reader
     private BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
     private Connection con;
@@ -33,7 +33,7 @@ public class branch implements ActionListener
 
     /*
      * constructs login window and loads JDBC driver
-     */ 
+     */
     public branch()
     {
       mainFrame = new JFrame("User Login");
@@ -59,13 +59,13 @@ public class branch implements ActionListener
       contentPane.setLayout(gb);
       contentPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-      // place the username label 
+      // place the username label
       c.gridwidth = GridBagConstraints.RELATIVE;
       c.insets = new Insets(10, 10, 5, 0);
       gb.setConstraints(usernameLabel, c);
       contentPane.add(usernameLabel);
 
-      // place the text field for the username 
+      // place the text field for the username
       c.gridwidth = GridBagConstraints.REMAINDER;
       c.insets = new Insets(10, 0, 5, 10);
       gb.setConstraints(usernameField, c);
@@ -77,7 +77,7 @@ public class branch implements ActionListener
       gb.setConstraints(passwordLabel, c);
       contentPane.add(passwordLabel);
 
-      // place the password field 
+      // place the password field
       c.gridwidth = GridBagConstraints.REMAINDER;
       c.insets = new Insets(0, 0, 10, 10);
       gb.setConstraints(passwordField, c);
@@ -95,14 +95,14 @@ public class branch implements ActionListener
       loginButton.addActionListener(this);
 
       // anonymous inner class for closing the window
-      mainFrame.addWindowListener(new WindowAdapter() 
+      mainFrame.addWindowListener(new WindowAdapter()
       {
-	public void windowClosing(WindowEvent e) 
-	{ 
-	  System.exit(0); 
+	public void windowClosing(WindowEvent e)
+	{
+	  System.exit(0);
 	}
       });
-
+//meaning less line
       // size the window to obtain a best fit for the components
       mainFrame.pack();
 
@@ -117,7 +117,7 @@ public class branch implements ActionListener
       // place the cursor in the text field for the username
       usernameField.requestFocus();
 
-      try 
+      try
       {
 	// Load the Oracle JDBC driver
 		DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
@@ -133,12 +133,12 @@ public class branch implements ActionListener
 
     /*
      * connects to Oracle database named ug using user supplied username and password
-     */ 
+     */
     private boolean connect(String username, String password)
     {
-      String connectURL = "jdbc:oracle:thin:@dbhost.ugrad.cs.ubc.ca:1522:ug"; 
+      String connectURL = "jdbc:oracle:thin:@dbhost.ugrad.cs.ubc.ca:1522:ug";
 
-      try 
+      try
       {
 	con = DriverManager.getConnection(connectURL,username,password);
 
@@ -155,20 +155,20 @@ public class branch implements ActionListener
 
     /*
      * event handler for login window
-     */ 
-    public void actionPerformed(ActionEvent e) 
+     */
+    public void actionPerformed(ActionEvent e)
     {
 	if ( connect(usernameField.getText(), String.valueOf(passwordField.getPassword())) )
 	{
-	  // if the username and password are valid, 
-	  // remove the login window and display a text menu 
+	  // if the username and password are valid,
+	  // remove the login window and display a text menu
 	  mainFrame.dispose();
-          showMenu();     
+          showMenu();
 	}
 	else
 	{
 	  loginAttempts++;
-	  
+
 	  if (loginAttempts >= 3)
 	  {
 	      mainFrame.dispose();
@@ -179,22 +179,22 @@ public class branch implements ActionListener
 	      // clear the password
 	      passwordField.setText("");
 	  }
-	}             
-                    
+	}
+
     }
 
 
     /*
      * displays simple text interface
-     */ 
+     */
     private void showMenu()
     {
 	int choice;
 	boolean quit;
 
 	quit = false;
-	
-	try 
+
+	try
 	{
 	    // disable auto commit mode
 	    con.setAutoCommit(false);
@@ -209,7 +209,7 @@ public class branch implements ActionListener
 		System.out.print("5.  Quit\n>> ");
 
 		choice = Integer.parseInt(in.readLine());
-		
+
 		System.out.println(" ");
 
 		switch(choice)
@@ -250,7 +250,7 @@ public class branch implements ActionListener
 
     /*
      * inserts a branch
-     */ 
+     */
     private void insertBranch()
     {
 	int                bid;
@@ -259,11 +259,11 @@ public class branch implements ActionListener
 	String             bcity;
 	int                bphone;
 	PreparedStatement  ps;
-	  
+
 	try
 	{
 	  ps = con.prepareStatement("INSERT INTO branch VALUES (?,?,?,?,?)");
-	
+
 	  System.out.print("\nBranch ID: ");
 	  bid = Integer.parseInt(in.readLine());
 	  ps.setInt(1, bid);
@@ -274,7 +274,7 @@ public class branch implements ActionListener
 
 	  System.out.print("\nBranch Address: ");
 	  baddr = in.readLine();
-	  
+
 	  if (baddr.length() == 0)
           {
 	      ps.setString(3, null);
@@ -283,7 +283,7 @@ public class branch implements ActionListener
 	  {
 	      ps.setString(3, baddr);
 	  }
-	 
+
 	  System.out.print("\nBranch City: ");
 	  bcity = in.readLine();
 	  ps.setString(4, bcity);
@@ -302,7 +302,7 @@ public class branch implements ActionListener
 
 	  ps.executeUpdate();
 
-	  // commit work 
+	  // commit work
 	  con.commit();
 
 	  ps.close();
@@ -314,10 +314,10 @@ public class branch implements ActionListener
 	catch (SQLException ex)
 	{
 	    System.out.println("Message: " + ex.getMessage());
-	    try 
+	    try
 	    {
 		// undo the insert
-		con.rollback();	
+		con.rollback();
 	    }
 	    catch (SQLException ex2)
 	    {
@@ -330,16 +330,16 @@ public class branch implements ActionListener
 
     /*
      * deletes a branch
-     */ 
+     */
     private void deleteBranch()
     {
 	int                bid;
 	PreparedStatement  ps;
-	  
+
 	try
 	{
 	  ps = con.prepareStatement("DELETE FROM branch WHERE branch_id = ?");
-	
+
 	  System.out.print("\nBranch ID: ");
 	  bid = Integer.parseInt(in.readLine());
 	  ps.setInt(1, bid);
@@ -363,9 +363,9 @@ public class branch implements ActionListener
 	{
 	    System.out.println("Message: " + ex.getMessage());
 
-            try 
+            try
 	    {
-		con.rollback();	
+		con.rollback();
 	    }
 	    catch (SQLException ex2)
 	    {
@@ -374,21 +374,21 @@ public class branch implements ActionListener
 	    }
 	}
     }
-    
+
 
     /*
      * updates the name of a branch
-     */ 
+     */
     private void updateBranch()
     {
 	int                bid;
 	String             bname;
 	PreparedStatement  ps;
-	  
+
 	try
 	{
 	  ps = con.prepareStatement("UPDATE branch SET branch_name = ? WHERE branch_id = ?");
-	
+
 	  System.out.print("\nBranch ID: ");
 	  bid = Integer.parseInt(in.readLine());
 	  ps.setInt(2, bid);
@@ -414,23 +414,23 @@ public class branch implements ActionListener
 	catch (SQLException ex)
 	{
 	    System.out.println("Message: " + ex.getMessage());
-	    
-	    try 
+
+	    try
 	    {
-		con.rollback();	
+		con.rollback();
 	    }
 	    catch (SQLException ex2)
 	    {
 		System.out.println("Message: " + ex2.getMessage());
 		System.exit(-1);
 	    }
-	}	
+	}
     }
 
-    
+
     /*
      * display information about branches
-     */ 
+     */
     private void showBranch()
     {
 	String     bid;
@@ -440,7 +440,7 @@ public class branch implements ActionListener
 	String     bphone;
 	Statement  stmt;
 	ResultSet  rs;
-	   
+
 	try
 	{
 	  stmt = con.createStatement();
@@ -454,20 +454,20 @@ public class branch implements ActionListener
 	  int numCols = rsmd.getColumnCount();
 
 	  System.out.println(" ");
-	  
+
 	  // display column names;
 	  for (int i = 0; i < numCols; i++)
 	  {
 	      // get column name and print it
 
-	      System.out.printf("%-15s", rsmd.getColumnName(i+1));    
+	      System.out.printf("%-15s", rsmd.getColumnName(i+1));
 	  }
 
 	  System.out.println(" ");
 
 	  while(rs.next())
 	  {
-	      // for display purposes get everything from Oracle 
+	      // for display purposes get everything from Oracle
 	      // as a string
 
 	      // simplified output formatting; truncation may occur
@@ -499,23 +499,22 @@ public class branch implements ActionListener
 	      else
 	      {
 	    	  System.out.printf("%-15.15s\n", bphone);
-	      }      
+	      }
 	  }
- 
-	  // close the statement; 
+
+	  // close the statement;
 	  // the ResultSet will also be closed
 	  stmt.close();
 	}
 	catch (SQLException ex)
 	{
 	    System.out.println("Message: " + ex.getMessage());
-	}	
+	}
     }
-    
- 
+
+
     public static void main(String args[])
     {
       branch b = new branch();
     }
 }
-
