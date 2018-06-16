@@ -408,7 +408,7 @@ public class Manager extends controller{
         while (!acc){
             System.out.print("dealName: ");
             dealName = in.readLine();
-            Statement s = con.prepareStatement("SELECT * FROM Deal WHERE dealName = ?");
+            PreparedStatement s = con.prepareStatement("SELECT * FROM Deal WHERE dealName = ?");
             s.setString(1, dealName);
             ResultSet res = s.executeQuery();
             if(!res.next()) {
