@@ -192,7 +192,9 @@ public class controller implements ActionListener {
                         Manager m = new Manager();
                         m.validateID();
                         break;
-                    case 2:  //deleteItem();
+                    case 2:
+                        Employee e = new Employee();
+                        e.validateID();
                         break;
                     case 3:
                         Member mem = new Member();
