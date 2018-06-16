@@ -33,12 +33,10 @@ public class Manager extends controller{
                     if (rs.next()) {
                         System.out.print("Access granted: Welcome.");
                         managerID = id;
-<<<<<<< HEAD
+
 
                         branch = rs.getInt("branchNumber");
 
-=======
->>>>>>> 58ce2b142d36131b7896af850f16ad91e74c06a9
                         showMenu();
                     } else {
                         System.out.print("Access denied: Invalid manager ID.");
@@ -71,7 +69,6 @@ public class Manager extends controller{
         boolean quit = false;
         try {
             while (!quit) {
-<<<<<<< HEAD
                 System.out.print("\n");
                 System.out.print("1.  Show all employees\n");
                 System.out.print("2.  Manage employee\n");
@@ -80,14 +77,7 @@ public class Manager extends controller{
                 System.out.print("5.  Manage deal\n");
                 System.out.print("6.  Generate report\n");
                 System.out.print("7.  Quit\n>> ");
-=======
-                System.out.print("1.  Manage employee\n");
-                System.out.print("2.  Manage item\n");
-                System.out.print("3.  Manage membership\n");
-                System.out.print("4.  Manage deal\n");
-                System.out.print("5.  Generate transaction report\n");
-                System.out.print("6.  Quit\n>> ");
->>>>>>> 58ce2b142d36131b7896af850f16ad91e74c06a9
+
 
                 choice = Integer.parseInt(in.readLine());
 
@@ -256,10 +246,9 @@ public class Manager extends controller{
     }
 
     private void manageItemStorage() {
-<<<<<<< HEAD
-        int                id;
-        int             amount;
-        PreparedStatement  ps;
+        int id;
+        int amount;
+        PreparedStatement ps;
         try {
 
             ps = con.prepareStatement("UPDATE Storage SET amount = ? WHERE itemID = ? AND branchNumber = ?");
@@ -285,14 +274,9 @@ public class Manager extends controller{
 
 
             con.commit();
-=======
-            // TODO:
+        }
     }
 
-    private void manageItemPrice () {
-            // TODO
-    }
->>>>>>> 58ce2b142d36131b7896af850f16ad91e74c06a9
 
     private void displayItemInfo() {
             // TODO
@@ -324,7 +308,7 @@ public class Manager extends controller{
                         showAllDeals();
                         break;
                     case 3:
-                       // modifyDeal();
+                        modifyDeal();
                 }
             }
         }  catch (IOException e) {
@@ -332,30 +316,126 @@ public class Manager extends controller{
         }
     }
 
-<<<<<<< HEAD
+
     private void showItems() {
         // TODO
     }
-=======
+
+
+    private void modifyDeal(){
+        int     choice;
+        boolean quit = false;
+
+        try {
+            while (!quit) {
+                System.out.print("1.  Add item to deal\n");
+                System.out.print("2.  delete deal\n");
+                System.out.print("3.  delete item from deal\n");
+                System.out.print("4.  modify deal name or duration\n>> ");
+                System.out.println("5. modify deal percentage");
+
+
+                choice = Integer.parseInt(in.readLine());
+
+                System.out.println(" ");
+
+                switch (choice) {
+                    case 1:
+                        addItemToDeal();
+                        break;
+                    case 2:
+                        //deleteDeal();
+                        break;
+                    case 3:
+                        //deleteItemFromDeal();
+                        break;
+                    case 4:
+                        //modifyDealNameOrDuration();
+                        break;
+                    case 5:
+                        //modifyDealPercent();
+                        break;
+                }
+            }
+        }  catch (IOException e) {
+            System.out.println("IOException!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    private void addItemToDeal() throws IOException, SQLException {
+        System.out.println("\n please enter the itemID you want to add to deal ");
+        int itemID = searchItem();
+        System.out.println("please enter deal name ");
+        String  dealName = searchDeal();
+        System.out.println("please enter percentage ");
+        double persent = Double.parseDouble(in.readLine());
+        PreparedStatement ps = con.prepareStatement("INSERT INTO Deal VALUES (?,?,?)");
+        ps.setInt(1,itemID);
+        ps.setString(2,dealName);
+        ps.setDouble(3, persent);
+        ps.executeUpdate();
+        System.out.println("Success!!!");
+        con.commit();
+        ps.close();
+    }
+    private int searchItem() throws IOException, SQLException{
+        boolean acc = false;
+        int itemID = 0;
+        while (!acc){
+            System.out.print("ItemID: ");
+            itemID = Integer.parseInt(in.readLine());
+            Statement s = con.createStatement();
+            ResultSet res = s.executeQuery("SELECT * FROM Item WHERE itemID = " + itemID);
+            if(!res.next()) {
+                System.out.println("no such item please try again! ");
+            } else {
+                acc = true;
+                return itemID;
+
+            }
+
+        }
+        return  itemID;
+
+    }
+
+    private String searchDeal() throws IOException, SQLException {
+        boolean acc = false;
+        String dealName = null;
+        while (!acc){
+            System.out.print("ItemID: ");
+            dealName = in.readLine();
+            Statement s = con.createStatement();
+            ResultSet res = s.executeQuery("SELECT * FROM Deal WHERE dealName = " + dealName);
+            if(!res.next()) {
+                System.out.println("no such deal please try again! ");
+            } else {
+                acc = true;
+                return dealName;
+
+            }
+
+        }
+        return  dealName;
+
+    }
+
     private void showAllDeals(){
         String     dealName;
         String     duration;
         int itemID;
         double percentage;
->>>>>>> 58ce2b142d36131b7896af850f16ad91e74c06a9
 
         Statement  stmt;
         ResultSet  rs;
         try
         {
             stmt = con.createStatement();
-<<<<<<< HEAD
 
             rs = stmt.executeQuery("SELECT * FROM Item WHRER itemID = id");
 
-=======
             rs = stmt.executeQuery("SELECT d.dealName AS dealName, d.duration as duration, id.itemId as itemId, id.percentage as persentage FROM Deal d, ItemsInDeal id WHERE d.dealName = id.dealName");
->>>>>>> 58ce2b142d36131b7896af850f16ad91e74c06a9
             // get info on ResultSet
             ResultSetMetaData rsmd = rs.getMetaData();
             // get number of columns
@@ -483,7 +563,6 @@ public class Manager extends controller{
 
         }
 
-<<<<<<< HEAD
     private void getReport() {
 
     }
@@ -606,10 +685,3 @@ public class Manager extends controller{
     }
 
 }
-=======
-    }
-    private void getReport(){
-            // TODO
-    }
-}
->>>>>>> 58ce2b142d36131b7896af850f16ad91e74c06a9
