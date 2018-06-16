@@ -213,12 +213,111 @@ public class Manager extends controller{
                         showAllDeals();
                         break;
                     case 3:
-                       // modifyDeal();
+                        modifyDeal();
                 }
             }
         }  catch (IOException e) {
             System.out.println("IOException!");
         }
+    }
+
+    private void modifyDeal(){
+        int     choice;
+        boolean quit = false;
+
+        try {
+            while (!quit) {
+                System.out.print("1.  Add item to deal\n");
+                System.out.print("2.  delete deal\n");
+                System.out.print("3.  delete item from deal\n");
+                System.out.print("4.  modify deal name or duration\n>> ");
+                System.out.println("5. modify deal percentage");
+
+
+                choice = Integer.parseInt(in.readLine());
+
+                System.out.println(" ");
+
+                switch (choice) {
+                    case 1:
+                        addItemToDeal();
+                        break;
+                    case 2:
+                        //deleteDeal();
+                        break;
+                    case 3:
+                        //deleteItemFromDeal();
+                        break;
+                    case 4:
+                        //modifyDealNameOrDuration();
+                        break;
+                    case 5:
+                        //modifyDealPercent();
+                        break;
+                }
+            }
+        }  catch (IOException e) {
+            System.out.println("IOException!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    private void addItemToDeal() throws IOException, SQLException {
+        System.out.println("\n please enter the itemID you want to add to deal ");
+        int itemID = searchItem();
+        System.out.println("please enter deal name ");
+        String  dealName = searchDeal();
+        System.out.println("please enter percentage ");
+        double persent = Double.parseDouble(in.readLine());
+        PreparedStatement ps = con.prepareStatement("INSERT INTO Deal VALUES (?,?,?)");
+        ps.setInt(1,itemID);
+        ps.setString(2,dealName);
+        ps.setDouble(3, persent);
+        ps.executeUpdate();
+        System.out.println("Success!!!");
+        con.commit();
+        ps.close();
+    }
+    private int searchItem() throws IOException, SQLException{
+        boolean acc = false;
+        int itemID = 0;
+        while (!acc){
+            System.out.print("ItemID: ");
+            itemID = Integer.parseInt(in.readLine());
+            Statement s = con.createStatement();
+            ResultSet res = s.executeQuery("SELECT * FROM Item WHERE itemID = " + itemID);
+            if(!res.next()) {
+                System.out.println("no such item please try again! ");
+            } else {
+                acc = true;
+                return itemID;
+
+            }
+
+        }
+        return  itemID;
+
+    }
+
+    private String searchDeal() throws IOException, SQLException {
+        boolean acc = false;
+        String dealName = null;
+        while (!acc){
+            System.out.print("ItemID: ");
+            dealName = in.readLine();
+            Statement s = con.createStatement();
+            ResultSet res = s.executeQuery("SELECT * FROM Deal WHERE dealName = " + dealName);
+            if(!res.next()) {
+                System.out.println("no such deal please try again! ");
+            } else {
+                acc = true;
+                return dealName;
+
+            }
+
+        }
+        return  dealName;
+
     }
 
     private void showAllDeals(){
