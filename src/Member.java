@@ -9,10 +9,11 @@ import java.awt.*;
 import java.awt.event.*;
 
 
-public class Member extends Controller {
+public class Member extends controller {
     int memID;
 
     public void memberShowMenu() {
+        connect("ora_a1q1b", "a24581167");
 
         //enter system
         checkPoint();
@@ -24,10 +25,7 @@ public class Member extends Controller {
         quit = false;
 
         try {
-
-
             while (!quit) {
-                checkPoint();
 
                 System.out.print("\n\nPlease choose one of the following: \n");
                 System.out.print("1.  Check another membership point\n");
@@ -69,30 +67,18 @@ public class Member extends Controller {
 
         while (!enterSucc) {
             String memName = null;
-            String point = null;
+            int point = 0;
             try {
                 System.out.println("please enter membership id. ");
                 enteredID = Integer.parseInt(in.readLine());
                 statement = con.createStatement();
-                result = statement.executeQuery("SELECT memberID, name FROM Membership WHERE memberID = " + enteredID);
-                if (result != null)
-                    enterSucc = true;
-                else {
-                    System.out.println("invalid membership id! ");
-                    System.out.println("enter 1 to exit");
-                    System.out.println("enter 2 to try again");
-                    int exitMem = Integer.parseInt(in.readLine());
-                    if (exitMem == 1) {
-                        System.out.println("GoodBye!");
-                        System.exit(0);
-                    }
-                }
+                result = statement.executeQuery("SELECT * FROM Membership WHERE memberID = " + enteredID);
+                result.next();
+                result.getInt("memberID");
+                enterSucc = true;
+                memName = result.getString("name");
+                point = result.getInt("points");
 
-
-                while (result.next()) {
-                    memName = result.getString("name");
-                    point = result.getString("points");
-                }
 
             } catch (IOException e) {
                 System.out.println("IOException!");
@@ -105,6 +91,20 @@ public class Member extends Controller {
                 }
             } catch (SQLException ex) {
                 System.out.println("Message: " + ex.getMessage());
+                enterSucc = false;
+                System.out.println("invalid membership id! ");
+                System.out.println("enter 1 to exit");
+                System.out.println("enter 2 to try again");
+                try {
+                    int exitMem = Integer.parseInt(in.readLine());
+                    if (exitMem == 1) {
+                        System.out.println("GoodBye!");
+                        System.exit(0);
+                    }
+                } catch (IOException ie) {
+                    System.out.println("io exception " + ie.getMessage());
+                }
+
             }
 
 
