@@ -568,13 +568,10 @@ public class Manager extends controller{
         }
     }
 
-    private boolean checkValidDur(String duration){
-        // TODO: check duration valid
-        return true;
-    }
     private void addNewDeal() {
         String dealName = null;
-        String dur;
+        Timestamp startDate;
+        Timestamp endDate;
 
         int itemID;
         double percent;
@@ -584,17 +581,28 @@ public class Manager extends controller{
 
         while (!canExit) {
             try {
-                ps = con.prepareStatement("INSERT INTO Deal VALUES (?,?)");
+                ps = con.prepareStatement("INSERT INTO Deal VALUES (?,?,?)");
                 System.out.print("\nDeal name: ");
                 dealName = in.readLine();
                 ps.setString(1, dealName);
-                System.out.print("\nDuration: ");
-                dur = in.readLine();
-                ps.setString(2, dur);
-                while (!checkValidDur(dur)) {
-                    System.out.println("invalid duration format, please try again.");
-                    dur = in.readLine();
-                }
+                System.out.println("\nDuration ");
+                System.out.println("start date");
+                System.out.print("start Year:");
+                int startY = Integer.parseInt(in.readLine());
+                System.out.print("start month:");
+                int startM = Integer.parseInt(in.readLine());
+                System.out.print("start day:");
+                int startD = Integer.parseInt(in.readLine());
+                startDate = new Timestamp(startY, startM, startD, 0,0,0,0);
+                System.out.print("end year:");
+                int endY = Integer.parseInt(in.readLine());
+                System.out.print("end month:");
+                int endM = Integer.parseInt(in.readLine());
+                System.out.print("end date:");
+                int endD = Integer.parseInt(in.readLine());
+                endDate = new Timestamp(endY, endM, endD, 0, 0, 0, 0);
+                ps.setTimestamp(2, startDate);
+                ps.setTimestamp(3, endDate);
                 ps.executeUpdate();
                 // ps.close();
             } catch (IOException e) {
