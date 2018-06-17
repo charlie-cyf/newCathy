@@ -10,36 +10,33 @@ public class Employee extends controller {
     }
 
 
-    public void employeeShowMenu() {
+    public void employeeShowMenu() throws IOException, SQLException{
         int choice;
         boolean quit = false;
-        try {
-            while (!quit) {
-                System.out.print("\n\nPlease choose one of the following: \n");
-                System.out.print("1.  processPurchase\n");
-                System.out.print("2.  manageMembership\n");
-                System.out.print("3.  Quit\n");
-                choice = Integer.parseInt(in.readLine());
+        while (!quit) {
+            System.out.print("\n\nPlease choose one of the following: \n");
+            System.out.print("1.  processPurchase\n");
+            System.out.print("2.  manageMembership\n");
+            System.out.print("3.  Quit\n");
+            choice = Integer.parseInt(in.readLine());
 
-                System.out.println(" ");
+            System.out.println(" ");
 
-                switch (choice) {
-                    case 1:
-                        processPurchase();
-                        break;
-                    case 2:
-                        manageMemberShip();
-                        break;
-                    case 3:
-                        quit = true;
-                }
+            switch (choice) {
+                case 1:
+                    processPurchase();
+                    break;
+                case 2:
+                    manageMemberShip();
+                    break;
+                case 3:
+                    quit = true;
             }
-        }catch (IOException e){
-            System.out.println("IOException!");
         }
+
     }
 
-    private void manageMemberShip() {
+    private void manageMemberShip() throws IOException, SQLException {
         String name;
         String phone;
         PreparedStatement ps;
@@ -49,50 +46,31 @@ public class Employee extends controller {
         boolean current = false;
         Random r = new Random();
 
-        try {
-            while(!current) {
-                id = r.nextInt(1000);
-                ps = con.prepareStatement("SELECT * FROM MemberShip WHERE memberID = ?");
-                ps.setInt(1, id);
-                rs = ps.executeQuery();
-                if(!rs.next())
-                    current = true;
-                ps.close();
-            }
-
-            ps = con.prepareStatement("INSERT INTO MemberShip VALUES (?,?,?,1)");
-            ps.setInt(1,id);
-            System.out.print("\nplease Enter Member name : \n");
-            name = in.readLine();
-            ps.setString(2,name);
-            System.out.print("\nplease Enter Member phone number : \n");
-            phone = in.readLine();
-            ps.setString(3,phone);
-            ps.executeUpdate();
-
-            con.commit();
+        while(!current) {
+            id = r.nextInt(1000);
+            ps = con.prepareStatement("SELECT * FROM MemberShip WHERE memberID = ?");
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            if(!rs.next())
+                current = true;
             ps.close();
+        }
 
-        }catch(IOException e){
-            System.out.println("IOException!");
-        }
-        catch (SQLException ex)
-        {
-            try
-            {
-                // undo the insert
-                con.rollback();
-            }
-            catch (SQLException ex2)
-            {
-                System.out.println("Message: " + ex2.getMessage());
-                System.exit(-1);
-            }
-            System.out.println("Message: " + ex.getMessage());
-        }
+        ps = con.prepareStatement("INSERT INTO MemberShip VALUES (?,?,?,0)");
+        ps.setInt(1,id);
+        System.out.print("\nplease Enter Member name : \n");
+        name = in.readLine();
+        ps.setString(2,name);
+        System.out.print("\nplease Enter Member phone number : \n");
+        phone = in.readLine();
+        ps.setString(3,phone);
+        ps.executeUpdate();
+
+        con.commit();
+        ps.close();
     }
 
-    private void processPurchase() {
+    private void processPurchase() throws IOException, SQLException {
         int itemid;
         double totalPrice = 0;
         int receiptNumber = 0;
@@ -102,64 +80,44 @@ public class Employee extends controller {
         ResultSet rs;
         Random r = new Random();
 
-        try {
-            while(!current) {
-                receiptNumber = branch * 1000 + r.nextInt(100) + 1000000;
-                ps = con.prepareStatement("SELECT * FROM Purchase WHERE receiptNumber = ?");
-                ps.setInt(1, receiptNumber);
-                rs = ps.executeQuery();
-                if (!rs.next())
-                    current = true;
-                ps.close();
-            }
-
-            ps = con.prepareStatement("INSERT INTO Purchase VALUES (?,1,1,1,?,?)");
-            ps.setInt(1,receiptNumber);
-            ps.setInt(2,id);
-            ps.setInt(3,branch);
-
-            ps.executeUpdate();
-
-            con.commit();
+        while(!current) {
+            receiptNumber = branch * 1000 + r.nextInt(100) + 1000000;
+            ps = con.prepareStatement("SELECT * FROM Purchase WHERE receiptNumber = ?");
+            ps.setInt(1, receiptNumber);
+            rs = ps.executeQuery();
+            if (!rs.next())
+                current = true;
             ps.close();
-
-            while(!finish) {
-                totalPrice += showPurchase(receiptNumber);
-                System.out.print("\n\nTotal: " + totalPrice);
-                System.out.print("\n press 0 to quit");
-                System.out.print("\n press 1 to delete last item");
-                System.out.print("\n press 2 to finish the purchase");
-                System.out.print("\nplease Enter item ID: \n");
-                itemid = Integer.parseInt(in.readLine());
-                if(itemid ==0 )
-                    System.exit(0);
-                else if(itemid == 1)
-                    deleteItem();
-                else if(itemid == 2)
-                    finish = true;
-                else
-                    addItem(itemid, receiptNumber);
-
-            }
-
-
-        }catch (IOException e) {
-            System.out.println("IOException!");
         }
-         catch (SQLException ex)
-            {
-                try
-                {
-                    // undo the insert
-                    con.rollback();
-                }
-                catch (SQLException ex2)
-                {
-                    System.out.println("Message: " + ex2.getMessage());
-                    System.exit(-1);
-                }
-                System.out.println("Message: " + ex.getMessage());
+
+        ps = con.prepareStatement("INSERT INTO Purchase VALUES (?,1,1,1,?,?)");
+        ps.setInt(1,receiptNumber);
+        ps.setInt(2,id);
+        ps.setInt(3,branch);
+
+        ps.executeUpdate();
+
+        con.commit();
+        ps.close();
+
+        while(!finish) {
+            totalPrice += showPurchase(receiptNumber);
+            System.out.print("\n\nTotal: " + totalPrice);
+            System.out.print("\n press 0 to quit");
+            System.out.print("\n press 1 to delete last item");
+            System.out.print("\n press 2 to finish the purchase");
+            System.out.print("\nplease Enter item ID: \n");
+            itemid = Integer.parseInt(in.readLine());
+            if(itemid ==0 )
+                System.exit(0);
+            else if(itemid == 1)
+                deleteItem();
+            else if(itemid == 2)
+                finish = true;
+            else
+                addItem(itemid, receiptNumber);
             }
+
     }
 
     public void validateID() {
@@ -180,30 +138,41 @@ public class Employee extends controller {
                     ps.setInt(1, eid);
 
                     rs = ps.executeQuery();
-                    if (!rs.next())
+                    if (!rs.next()) {
                         System.out.print("\nAccess denied: Invalid employee ID");
+                    }
                     else {
                         this.branch = rs.getInt("branchNumber");
                         this.id = eid;
                         quit = true;
+                        System.out.print("Welcome: " + id);
+                        employeeShowMenu();
                     }
 
                     ps.close();
+
                 }
 
             } catch (IOException e) {
                 System.out.println("IOException!");
             } catch (SQLException ex) {
                 System.out.println("Message: " + ex.getMessage());
+                try
+                {
+                    con.rollback();
+                }
+                catch (SQLException ex2)
+                {
+                    System.out.println("Message: " + ex2.getMessage());
+                    System.exit(-1);
+                }
 
             }
 
 
-
-        employeeShowMenu();
     }
 
-    private double showPurchase(int receiptNumber){
+    private double showPurchase(int receiptNumber) throws SQLException{
         String     itemID;
         String     itemName;
         double    itemPrice = 0;
@@ -212,83 +181,78 @@ public class Employee extends controller {
         PreparedStatement  ps;
         ResultSet  rs;
         System.out.print("\nItems:");
-        try{
-            ps = con.prepareStatement("SELECT * FROM Item i, ItemsInPurchase ip WHERE ip.receiptNumber = ? and i.itemID = ip.itemID");
-            ps.setInt(1,receiptNumber);
-            rs = ps.executeQuery();
+        ps = con.prepareStatement("SELECT * FROM Item i, ItemsInPurchase ip WHERE ip.receiptNumber = ? and i.itemID = ip.itemID");
+        ps.setInt(1,receiptNumber);
+        rs = ps.executeQuery();
 
-            System.out.println(" ");
+        System.out.println(" ");
 
 
-            System.out.printf("%-10s", "ITEMID");
-            System.out.printf("%-30s", "NAME");
-            System.out.printf("%-15s", "PRICE");
-            System.out.printf("%-20s", "TYPE");
-            System.out.printf("%-15s", "AMOUNT");
+        System.out.printf("%-10s", "ITEMID");
+        System.out.printf("%-30s", "NAME");
+        System.out.printf("%-15s", "PRICE");
+        System.out.printf("%-20s", "TYPE");
+        System.out.printf("%-15s", "AMOUNT");
 
-            System.out.println(" ");
+        System.out.println(" ");
 
-            while(rs.next())
-            {
+        while(rs.next())
+        {
 
-                itemID = rs.getString("itemID");
-                System.out.printf("%-10.10s", itemID);
+            itemID = rs.getString("itemID");
+            System.out.printf("%-10.10s", itemID);
 
-                itemName = rs.getString("name");
-                System.out.printf("%-30.20s", itemName);
+            itemName = rs.getString("name");
+            System.out.printf("%-30.20s", itemName);
 
-                itemPrice = rs.getDouble("price");
-                System.out.printf("%-15.20s", itemPrice);
+            itemPrice = rs.getDouble("price");
+            System.out.printf("%-15.20s", itemPrice);
 
-                itemType = rs.getString("type");
-                System.out.printf("%-20.15s", itemType);
+            itemType = rs.getString("type");
+            System.out.printf("%-20.15s", itemType);
 
-                itemAmount = rs.getInt("amount");
-                System.out.printf("%-15.15s\n",itemAmount);
+            itemAmount = rs.getInt("amount");
+            System.out.printf("%-15.15s\n",itemAmount);
 
-            }
-            ps.close();
         }
-        catch (SQLException ex){
-            System.out.println("Message: " + ex.getMessage());
-        }
+        ps.close();
 
         return itemPrice;
     }
 
-    private void addItem(int itemid, int receiptNumber){
+    private void addItem(int itemid, int receiptNumber) throws SQLException{
         PreparedStatement  ps;
         ResultSet  rs;
-
-        try {
-            ps = con.prepareStatement("SELECT * FROM item WHERE itemID = ?");
-            ps.setInt(1, itemid);
-            rs = ps.executeQuery();
+        ps = con.prepareStatement("SELECT * FROM item WHERE itemID = ?");
+        ps.setInt(1, itemid);
+        rs = ps.executeQuery();
             //ps.close();
-            if (!rs.next())
-                System.out.println("Invaild itemID");
-            else{
+        if (!rs.next())
+            System.out.println("Invaild itemID");
+        else{
+            ps = con.prepareStatement("SELECT * FROM itemsInPurchase WHERE itemID = ? AND receiptNumber = ?");
+            ps.setInt(1,itemid);
+            ps.setInt(2,receiptNumber);
+            rs = ps.executeQuery();
+            if(!rs.next()) {
                 ps = con.prepareStatement("INSERT INTO itemsInPurchase VALUES (?,?,1)");
-                ps.setInt(1,receiptNumber);
+                ps.setInt(1, receiptNumber);
                 ps.setInt(2, itemid);
-                ps.executeUpdate();
+            }else{
+                ps = con.prepareStatement("UPDATE itemsInPurchase SET amount = ? WHERE itemID = ? AND receiptNumber = ?");
+                ps.setInt(3, receiptNumber);
+                ps.setInt(2, itemid);
+                ps.setInt(1,rs.getInt("amount") + 1);
+            }
 
-                con.commit();
-            }
-            ps.close();
-        }catch (SQLException ex){
-            try
-            {
-                // undo the insert
-                con.rollback();
-            }
-            catch (SQLException ex2)
-            {
-                System.out.println("Message: " + ex2.getMessage());
-                System.exit(-1);
-            }
-            System.out.println("Message: " + ex.getMessage());
+
+            ps.executeUpdate();
+
+            con.commit();
+
         }
+        ps.close();
+
     }
 
     private void deleteItem(){
