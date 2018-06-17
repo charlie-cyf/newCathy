@@ -430,7 +430,7 @@ public class Manager extends controller{
                         deleteDeal();
                         break;
                     case 3:
-                        //deleteItemFromDeal();
+                        deleteItemFromDeal();
                         break;
                     case 4:
                         //modifyDealNameOrDuration();
@@ -446,6 +446,17 @@ public class Manager extends controller{
             e.printStackTrace();
         }
     }
+
+    private void deleteItemFromDeal() throws IOException, SQLException{
+      System.out.println("please enter itemID");
+      int itemId = searchItem();
+      System.out.println("please enter deal name");
+      String dealName = searchDeal();
+      PreparedStatement ps = con.prepareStatement("DELETE FROM ItemsInDeal WHRER dealName = \'"+dealName+"\' AND itemID = "+itemId);
+      con.commit();
+      System.out.println("successed!");
+    }
+
     private void addItemToDeal() throws IOException, SQLException {
         System.out.println("\n please enter the itemID you want to add to deal ");
         int itemID = searchItem();
