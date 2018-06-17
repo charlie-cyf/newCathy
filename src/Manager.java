@@ -3,6 +3,7 @@ import java.sql.*;
 
 // for reading from the command line
 import java.io.*;
+import java.util.*;
 
 public class Manager extends controller{
 
@@ -309,13 +310,13 @@ public class Manager extends controller{
       ps.setInt(2, id);
       ps.setInt(3, branch);
       displayItemInfo(id);
-      System.out.print("\nSet new storage amount: ");
+      System.out.print("\nSet new storage price: ");
       price = Double.parseDouble(in.readLine());
       while (price < 0) {
           System.out.print("\nStorage cannot be negative, please try again: ");
-          price = Double.parseInt(in.readLine());
+          price = Double.parseDouble(in.readLine());
       }
-      ps.setDouble(1, amount);
+      ps.setInt(1, price);
 
       int rowCount = ps.executeUpdate();
       if (rowCount == 0) {
@@ -356,13 +357,13 @@ public class Manager extends controller{
         while(rs.next())
         {
             // simplified output formatting; truncation may occur
-            clerkID = rs.getInt("itemID");
+            itemID = rs.getInt("itemID");
             System.out.printf("%-5s", itemID);
 
             name = rs.getString("name");
             System.out.printf("%-5s", name);
 
-            wage = rs.getInt("price");
+            price = rs.getInt("price");
             System.out.printf("%-5s\n", price);
 
             type = rs.getString("type");
@@ -637,71 +638,86 @@ public class Manager extends controller{
 
     }
 
-    private void getSalesRecord() throws IOException, SQLException{
-        String     bid;
-        String     bname;
-        String     baddr;
-        String     bcity;
-        String     bphone;
-
-        int receiptNumber;
-        String purchaseTime;
-        String purchaseDate;
-        double totalPrice;
-        int clerkID;
-        int branchNumber;
-
-        Statement  stmt;
-        ResultSet  rs;
-
-
-        stmt = con.createStatement();
-        rs = stmt.executeQuery("SELECT * FROM Purchase WHERE purchaseDate < ? AND purchaseDate > ? AND branchNumber = ? ");
-
-        // get info on ResultSet
-        ResultSetMetaData rsmd = rs.getMetaData();
-        // get number of columns
-        int numCols = rsmd.getColumnCount();
-
-        System.out.println(" ");
-
-        // display column names;
-        for (int i = 0; i < numCols; i++)
-        {
-          // get column name and print it
-          System.out.printf("%-15s", rsmd.getColumnName(i+1));
-        }
-
-        System.out.println(" ");
-        while(rs.next()) {
-          bid = rs.getString("branch_id");
-          System.out.printf("%-10.10s", bid);
-          bname = rs.getString("branch_name");
-          System.out.printf("%-20.20s", bname);
-
-          baddr = rs.getString("branch_addr");
-          if (rs.wasNull())
-          {
-              System.out.printf("%-20.20s", " ");
-          } else {
-              System.out.printf("%-20.20s", baddr);
-          }
-
-          bcity = rs.getString("branch_city");
-          System.out.printf("%-15.15s", bcity);
-
-          bphone = rs.getString("branch_phone");
-          if (rs.wasNull())
-          {
-              System.out.printf("%-15.15s\n", " ");
-          } else {
-              System.out.printf("%-15.15s\n", bphone);
-          }
-            // close the statement;
-            // the ResultSet will also be closed
-            stmt.close();
-        }
-    }
+    // private void getSalesRecord() throws IOException, SQLException{
+    //     int receiptNumber;
+    //     Time purchaseTime;
+    //     java.sql.Date purchaseDate;
+    //     int inputYear;
+    //     int inputMonth;
+    //     int inputDay;
+    //     double totalPrice;
+    //     int clerkID;
+    //     int branchNumber;
+    //
+    //     PreparedStatement  ps;
+    //     ResultSet  rs;
+    //
+    //     System.out.print("\nEnter starting year: ");
+    //     inputYear = Integer.parseInt(in.readLine());
+    //
+    //     System.out.print("\nEnter starting Month: ");
+    //     inputMonth = Integer.parseInt(in.readLine());
+    //
+    //     System.out.print("\nEnter starting Day: ");
+    //     inputDay = Integer.parseInt(in.readLine());
+    //
+    //     Date startDate = new java.sql.Date(inputYear, inputMonth, inputDay);
+    //
+    //     System.out.print("\nEnter ending year: ");
+    //     inputYear = Integer.parseInt(in.readLine());
+    //
+    //     System.out.print("\nEnter ending year: ");
+    //     inputYear = Integer.parseInt(in.readLine());
+    //
+    //     System.out.print("\nEnter ending year: ");
+    //     inputYear = Integer.parseInt(in.readLine());
+    //
+    //     Date endDate = new Date(inputYear, inputMonth, inputDay);
+    //
+    //     ps = con.prepareStatement("SELECT * FROM Purchase WHERE purchaseDate <= ? AND purchaseDate >= ? AND branchNumber = ?");
+    //
+    //     rs.setDate(1, startDate);
+    //     rs.setDate(2, endDate);
+    //     rs.setInt(3, branch);
+    //
+    //     // get info on ResultSet
+    //     ResultSetMetaData rsmd = rs.getMetaData();
+    //     // get number of columns
+    //     int numCols = rsmd.getColumnCount();
+    //
+    //     System.out.println(" ");
+    //
+    //     // display column names;
+    //     for (int i = 0; i < numCols; i++)
+    //     {
+    //       // get column name and print it
+    //       System.out.printf("%-15s", rsmd.getColumnName(i+1));
+    //     }
+    //
+    //     System.out.println(" ");
+    //     while(rs.next()) {
+    //       receiptNumber = rs.getInt("receiptNumber");
+    //       System.out.printf("%-10.10s", receiptNumber);
+    //
+    //       purchaseDate = rs.getDate("purchaseDate");
+    //       System.out.printf("%-20.20s", purchaseDate);
+    //       purchaseTime = rs.getTime("purchaseTime");
+    //       System.out.printf("%-20.20s", purchaseTime);
+    //
+    //       totalPrice = rs.getDouble("totalPrice");
+    //       System.out.printf("%-15.15s", totalPrice);
+    //
+    //       clerkID = rs.getInt("clerkID");
+    //       System.out.printf("%-15.15s", clerkID);
+    //
+    //       branchNumber = rs.getInt("branchNumber");
+    //       System.out.printf("%-15.15s\n", branchNumber);
+    //
+    //         // close the statement;
+    //         // the ResultSet will also be closed
+    //         stmt.close();
+    //     }
+    // }
 
     private boolean isEarlier(String d1, String d2) {
         int month1 = Integer.parseInt(d1.substring(0,2));
