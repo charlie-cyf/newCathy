@@ -316,7 +316,7 @@ public class Manager extends controller{
           System.out.print("\nStorage cannot be negative, please try again: ");
           price = Double.parseDouble(in.readLine());
       }
-      ps.setInt(1, price);
+      ps.setDouble(1, price);
 
       int rowCount = ps.executeUpdate();
       if (rowCount == 0) {
@@ -427,7 +427,7 @@ public class Manager extends controller{
                         addItemToDeal();
                         break;
                     case 2:
-                        //deleteDeal();
+                        deleteDeal();
                         break;
                     case 3:
                         //deleteItemFromDeal();
@@ -733,8 +733,13 @@ public class Manager extends controller{
         // TODO
     }
 
-    private void deleteDeal() {
-        // TODO
+    private void deleteDeal() throws IOException, SQLException {
+        System.out.println("please enter the deal name you want to delete");
+        String dName = searchDeal();
+        PreparedStatement ps = con.prepareStatement("DELETE FROM Deal WHRER DealName = \'"+dName+"\'");
+        ps.executeUpdate();
+        con.commit();
+        System.out.println("delete successed!");
     }
 
 }
