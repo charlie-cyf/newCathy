@@ -452,8 +452,13 @@ public class Manager extends controller{
       int itemId = searchItem();
       System.out.println("please enter deal name");
       String dealName = searchDeal();
-      PreparedStatement ps = con.prepareStatement("DELETE FROM ItemsInDeal WHRER dealName = \'"+dealName+"\' AND itemID = "+itemId);
-      con.commit();
+      try{
+        PreparedStatement ps = con.prepareStatement("DELETE FROM ItemsInDeal WHRER dealName = \'"+dealName+"\' AND itemID = "+itemId);
+        ps.executeUpdate();
+        con.commit();
+      } catch(SQLException se){
+        System.out.println("delete failed!\n back to menu");
+      }
       System.out.println("successed!");
     }
 
