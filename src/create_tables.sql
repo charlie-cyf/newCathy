@@ -56,7 +56,8 @@ grant select on Storage to public;
 
 CREATE TABLE Deal (
 	dealName CHAR(20) PRIMARY KEY,
-	duration CHAR(20)
+	startDate DATE,
+	endDate Date
 );
 
 grant select on Deal to public;
@@ -88,8 +89,8 @@ grant select on Offer to public;
 
 CREATE TABLE Purchase (
 	receiptNumber INTEGER PRIMARY KEY,
-	purchaseTime CHAR(20),
-	purchaseDate CHAR(20),
+	purchaseTime TIME,
+	purchaseDate DATE,
 	totalPrice NUMBER(5, 2) NOT NULL,
 	clerkID INTEGER NOT NULL,
 	branchNumber INTEGER NOT NULL,
