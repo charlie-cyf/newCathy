@@ -457,10 +457,11 @@ public class Manager extends controller{
         ps.setInt(1, itemId);
         ps.executeUpdate();
         con.commit();
+        System.out.println("successed!");
       } catch(SQLException se){
         System.out.println("delete failed!\n back to menu");
       }
-      System.out.println("successed!");
+
     }
 
     private void addItemToDeal() throws IOException, SQLException {
@@ -750,8 +751,8 @@ public class Manager extends controller{
     private void deleteDeal() throws IOException, SQLException {
         System.out.println("please enter the deal name you want to delete");
         String dName = searchDeal();
-        PreparedStatement ps = con.prepareStatement("DELETE FROM Deal WHRER DealName = \'"+dName+"\'");
-        ps.executeUpdate();
+        Statement ps = con.createStatement();
+        ps.executeUpdate("DELETE FROM (SELECT * FROM Deal d WHERE d.dealName = \'"+dName+"\')");
         con.commit();
         System.out.println("delete successed!");
     }
