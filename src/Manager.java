@@ -469,7 +469,7 @@ public class Manager extends controller{
         String  dealName = searchDeal();
         System.out.println("please enter percentage ");
         double persent = Double.parseDouble(in.readLine());
-        PreparedStatement ps = con.prepareStatement("INSERT INTO Deal VALUES (?,?,?)");
+        PreparedStatement ps = con.prepareStatement("INSERT INTO ItemsInDeal VALUES (?,?,?)");
         ps.setInt(1,itemID);
         ps.setString(2,dealName);
         ps.setDouble(3, persent);
