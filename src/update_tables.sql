@@ -74,4 +74,17 @@ insert into Storage (itemId, branchNumber, amount) values (0747, 3, 32);
 insert into Storage (itemId, branchNumber, amount) values (0748, 1, 160);
 insert into Storage (itemId, branchNumber, amount) values (0748, 5, 1503);
 
+insert into ItemsInPurchase(receiptNumber, itemID, amount) values (3165, 0744, 10);
+insert into ItemsInPurchase(receiptNumber, itemID, amount) values (3165, 0745, 10);
+insert into ItemsInPurchase(receiptNumber, itemID, amount) values (3165, 0747, 10);
+insert into ItemsInPurchase(receiptNumber, itemID, amount) values (3165, 0748, 10);
+insert into ItemsInPurchase(receiptNumber, itemID, amount) values (3304, 0744, 15);
+insert into ItemsInPurchase(receiptNumber, itemID, amount) values (3155, 0744, 20);
+insert into ItemsInPurchase(receiptNumber, itemID, amount) values (3083, 0744, 25);
+insert into ItemsInPurchase(receiptNumber, itemID, amount) values (3209, 0744, 10);
+insert into ItemsInPurchase(receiptNumber, itemID, amount) values (3120, 0744, 10);
+insert into ItemsInPurchase(receiptNumber, itemID, amount) values (3155, 0748, 10);
+insert into ItemsInPurchase(receiptNumber, itemID, amount) values (3083, 0748, 10);
+insert into ItemsInPurchase(receiptNumber, itemID, amount) values (3428, 0744, 10);
+insert into ItemsInPurchase(receiptNumber, itemID, amount) values (3083, 0745, 25);
 commit;

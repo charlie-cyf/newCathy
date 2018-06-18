@@ -414,8 +414,10 @@ public class Manager extends controller{
                 System.out.print("1.  Add item to deal\n");
                 System.out.print("2.  delete deal\n");
                 System.out.print("3.  delete item from deal\n");
-                System.out.print("4.  modify deal name or duration\n>> ");
-                System.out.println("5. modify deal percentage");
+                System.out.print("4.  find purchase containing all deals\n");
+                System.out.print("5.  modify deal duration\n");
+                System.out.print("6.  modify deal percentage\n");
+                System.out.println("7. go back\n>>");
 
 
                 choice = Integer.parseInt(in.readLine());
@@ -433,7 +435,7 @@ public class Manager extends controller{
                         deleteItemFromDeal();
                         break;
                     case 4:
-                        //modifyDealName();
+                        findPurchasesContainsAllItemsOnSale();
                         break;
                     case 5:
                         modifyDealDuration();
@@ -807,7 +809,43 @@ public class Manager extends controller{
       con.commit();
       ps.close();
       System.out.println("successed!");
-
     }
 
+    private void findPurchasesContainsAllItemsOnSale() throws SQLException {
+      int receiptNumber;
+      Statement stmt;
+      ResultSet rs;
+
+      stmt = con.createStatement();
+      rs = stmt.executeQuery("select distinct ip.receiptNumber from ItemsInPurchase ip where not exists (select iind.itemID from ItemsInDeal iind Minus select iinp.itemID from ItemsInPurchase iinp where iinp.receiptNumber = ip.receiptNumber)");
+
+      ResultSetMetaData rsmd = rs.getMetaData();
+      // get number of columns
+      int numCols = rsmd.getColumnCount();
+
+      // if (!rs.next()) {
+      //     System.out.println("no such purchase found! ");
+
+      System.out.println(" ");
+
+      // display column names;
+      for (int i = 0; i < numCols; i++)
+      {
+          // get column name and print it
+          System.out.printf("%-15s", rsmd.getColumnName(i+1));
+     }
+      System.out.println(" ");
+      while(rs.next())
+      {
+          // for display purposes get everything from Oracle
+          // as a string
+          // simplified output formatting; truncation may occur
+          receiptNumber = rs.getInt("receiptNumber");
+          System.out.printf("%-10.10s\n", receiptNumber);
+      }
+      // close the statement;
+      // the ResultSet will also be closed
+      stmt.close();
+
+  }
 }
