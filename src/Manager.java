@@ -252,7 +252,9 @@ public class Manager extends controller{
             System.out.print("1.  Manage item storage\n");
             System.out.print("2.  Display item storage\n");
             System.out.print("3.  Manage item price\n");
-            System.out.print("4.  Go back\n>> ");
+            System.out.println("4. show max price item in each type");
+            System.out.println("5. get total transaction amount");
+            System.out.print("6.  Go back\n>> ");
 
             choice = Integer.parseInt(in.readLine());
 
@@ -265,10 +267,55 @@ public class Manager extends controller{
                 case 2:
                     manageItemPrice();
                     break;
-                case 3:
+                case 4:
+                    showMaxPrice();
+                    break;
+                case 5:
+                    getTotalTransactionAmount();
+                    break;
+                case 6:
                     showMenu();
             }
         }
+    }
+
+    private void showMaxPrice() throws SQLException {
+      Statement stmt;
+      ResultSet rs;
+
+      stmt = con.createStatement();
+      rs = stmt.executeQuery("select type, Max(price) from Item group by type");
+      ResultSetMetaData rsmd = rs.getMetaData();
+      // get number of columns
+      int numCols = rsmd.getColumnCount();
+
+      // if (!rs.next()) {
+      //     System.out.println("no such purchase found! ");
+
+      System.out.println(" ");
+
+      // display column names;
+      for (int i = 0; i < numCols; i++)
+      {
+          // get column name and print it
+          System.out.printf("%-15s", rsmd.getColumnName(i+1));
+     }
+      System.out.println(" ");
+      while(rs.next())
+      {
+          // for display purposes get everything from Oracle
+          // as a string
+          // simplified output formatting; truncation may occur
+          String type = rs.getString("type");
+          System.out.printf("%-10.10s", type);
+          Double maxP = rs.getDouble("max(price)");
+          System.out.printf("%-10.10s\n", maxP);
+      }
+      // close the statement;
+      // the ResultSet will also be closed
+      stmt.close();
+
+
     }
 
     private void manageItemStorage() throws IOException, SQLException{
@@ -524,9 +571,59 @@ public class Manager extends controller{
 
     }
 
+private void getTotalTransactionAmount() throws SQLException, IOException {
+	Double totalPrice;
+	int count;
+	int inputYear;
+	int inputMonth;
+	int inputDay;
+
+	PreparedStatement ps;
+	ResultSet rs;
+
+	System.out.print("\nEnter starting year: ");
+	inputYear = Integer.parseInt(in.readLine());
+
+	System.out.print("\nEnter starting month: ");
+	inputMonth= Integer.parseInt(in.readLine());
+
+	System.out.print("\nEnter starting day:");
+	inputDay = Integer.parseInt(in.readLine());
+
+	java.sql.Timestamp startDate = new java.sql.Timestamp(inputYear, inputMonth, inputDay, 0, 0, 0, 0);
+
+	ps = con.prepareStatement("SELECT SUM(totalPrice) AS SUM, COUNT(totalPrice) AS CON FROM Purchase WHERE purchaseTime >= ? AND branchNumber = ?");
+	ps.setTimestamp(1, startDate);
+	ps.setInt(2, branch);
+
+	rs = ps.executeQuery();
+	ResultSetMetaData rsmd = rs.getMetaData();
+	int numCols = rsmd.getColumnCount();
+	for (int i = 0; i < numCols; i++)
+      	{
+          // get column name and print it
+          System.out.printf("%-15s", rsmd.getColumnName(i+1));
+      	}
+
+	System.out.println(" ");
+
+	// while(rs.next())
+	// {
+	// 	totalPrice = rs.getDouble("totalPrice");
+	// 	System.out.printf("%-5s", totalPrice);
+  //
+	// }
+
+	totalPrice = rs.getDouble("SUM");
+	count = rs.getInt("CON");
+	System.out.println("The total amount of transaction is " + count + " and total transaction is " + totalPrice);
+}
+
+
     private void showAllDeals(){
         String     dealName;
-        String     duration;
+        Timestamp startDate;
+        Timestamp endDate;
         int itemID;
         double percentage;
 
@@ -536,7 +633,7 @@ public class Manager extends controller{
         {
             stmt = con.createStatement();
 
-            rs = stmt.executeQuery("SELECT d.dealName AS dealName, d.duration as duration, id.itemId as itemId, id.percentage as persentage FROM Deal d, ItemsInDeal id WHERE d.dealName = id.dealName");
+            rs = stmt.executeQuery("SELECT d.dealName AS dealName, d.startDate as startDate,d.endDate as endDate, id.itemId as itemId, id.percentage as persentage FROM Deal d, ItemsInDeal id WHERE d.dealName = id.dealName");
             // get info on ResultSet
             ResultSetMetaData rsmd = rs.getMetaData();
             // get number of columns
@@ -558,8 +655,10 @@ public class Manager extends controller{
                 System.out.printf("%-10.10s", itemID);
                 dealName = rs.getString("dealName");
                 System.out.printf("%-20.20s", dealName);
-                duration = rs.getString("duration");
-                System.out.printf("%-20.20s", duration);
+                startDate = rs.getTimestamp("startDate");
+                System.out.printf("%-20.20s", startDate);
+                endDate = rs.getTimestamp("endDate");
+                System.out.printf("%-20.20s", endDate);
                 percentage = rs.getDouble("persentage");
                 System.out.printf("%-15.15s\n", percentage);
             }
