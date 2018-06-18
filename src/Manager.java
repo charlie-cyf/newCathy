@@ -414,9 +414,8 @@ public class Manager extends controller{
                 System.out.print("1.  Add item to deal\n");
                 System.out.print("2.  delete deal\n");
                 System.out.print("3.  delete item from deal\n");
-                System.out.print("4.  modify deal name\n>> ");
-                System.out.println("5. modify deal Duration");
-                System.out.println("6. modify deal percentage");
+                System.out.print("4.  modify deal name or duration\n>> ");
+                System.out.println("5. modify deal percentage");
 
 
                 choice = Integer.parseInt(in.readLine());
@@ -438,6 +437,7 @@ public class Manager extends controller{
                         break;
                     case 5:
                         modifyDealDuration();
+                        break;
                     case 6:
                         modifyDealPercent();
                         break;
@@ -797,13 +797,12 @@ public class Manager extends controller{
       inputDay = Integer.parseInt(in.readLine());
 
       java.sql.Timestamp endDate = new java.sql.Timestamp(inputYear, inputMonth, inputDay, 0, 0, 0, 0);
-      PreparedStatement ps = con.prepareStatement("UPDATE Deal d SET d.startDate = ? AND d.endDate = ? WHERE d.dealName = \'"+dealName+"\'");
+      PreparedStatement ps = con.prepareStatement("UPDATE Deal SET startDate = ? AND endDate = ? WHERE dealName = \'"+dealName+"\'");
       ps.setTimestamp(1, startDate);
       ps.setTimestamp(2, endDate);
       ps.executeUpdate();
       con.commit();
       System.out.println("successed!");
-
 
     }
 
