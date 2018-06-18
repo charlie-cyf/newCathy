@@ -1,14 +1,13 @@
 import java.sql.*;
 import java.io.*;
 import java.util.Random;
+import java.util.Date;
 
 public class Employee extends controller {
     private int id;
     private int branch;
 
-    public Employee() {
-    }
-
+    public Employee() {}
 
     public void employeeShowMenu() throws IOException, SQLException{
         int choice;
@@ -72,6 +71,9 @@ public class Employee extends controller {
 
     private void processPurchase() throws IOException, SQLException {
         int itemid;
+        int lastItem = 0;
+        double[] price_id = {0,0};
+        double price;
         double totalPrice = 0;
         int receiptNumber = 0;
         boolean current = false;
@@ -90,10 +92,12 @@ public class Employee extends controller {
             ps.close();
         }
 
-        ps = con.prepareStatement("INSERT INTO Purchase VALUES (?,1,1,1,?,?)");
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        ps = con.prepareStatement("INSERT INTO Purchase VALUES (?,?,1,?,?)");
         ps.setInt(1,receiptNumber);
-        ps.setInt(2,id);
-        ps.setInt(3,branch);
+        ps.setTimestamp(2,timestamp);
+        ps.setInt(3,id);
+        ps.setInt(4,branch);
 
         ps.executeUpdate();
 
@@ -101,22 +105,27 @@ public class Employee extends controller {
         ps.close();
 
         while(!finish) {
-            totalPrice += showPurchase(receiptNumber);
-            System.out.print("\n\nTotal: " + totalPrice);
+            showPurchase(receiptNumber, totalPrice);
             System.out.print("\n press 0 to quit");
-            System.out.print("\n press 1 to delete last item");
+            System.out.print("\n press 1 to delete item");
             System.out.print("\n press 2 to finish the purchase");
-            System.out.print("\nplease Enter item ID: \n");
+            System.out.print("\nplease Enter item ID: ");
             itemid = Integer.parseInt(in.readLine());
+
             if(itemid ==0 )
-                System.exit(0);
+                purchaseQuit(receiptNumber);//do nothing
             else if(itemid == 1)
-                deleteItem();
-            else if(itemid == 2)
+                totalPrice -= deleteItem(lastItem, receiptNumber, price_id[0]);
+            else if(itemid == 2) {
+                purchaseFinish(receiptNumber,totalPrice);
                 finish = true;
-            else
-                addItem(itemid, receiptNumber);
             }
+            else {
+                price_id = addItem(itemid, receiptNumber);
+                totalPrice += price_id[0];
+                lastItem = (int)price_id[1];
+            }
+        }
 
     }
 
@@ -172,10 +181,10 @@ public class Employee extends controller {
 
     }
 
-    private double showPurchase(int receiptNumber) throws SQLException{
+    private void showPurchase(int receiptNumber, double totalPrice) throws SQLException{
         String     itemID;
         String     itemName;
-        double    itemPrice = 0;
+        double    itemPrice;
         int itemAmount = 0;
         String     itemType;
         PreparedStatement  ps;
@@ -217,19 +226,22 @@ public class Employee extends controller {
         }
         ps.close();
 
-        return itemPrice;
+        System.out.print("\nTotal: " + Math.round(totalPrice * 100.0) / 100.0);
+
     }
 
-    private void addItem(int itemid, int receiptNumber) throws SQLException{
+    private double[] addItem(int itemid, int receiptNumber) throws SQLException{
         PreparedStatement  ps;
         ResultSet  rs;
+        double[] rvalue = new double[2];
         ps = con.prepareStatement("SELECT * FROM item WHERE itemID = ?");
         ps.setInt(1, itemid);
         rs = ps.executeQuery();
-            //ps.close();
         if (!rs.next())
             System.out.println("Invaild itemID");
         else{
+            rvalue[0] = rs.getDouble("price");
+            rvalue[1] = itemid;
             ps = con.prepareStatement("SELECT * FROM itemsInPurchase WHERE itemID = ? AND receiptNumber = ?");
             ps.setInt(1,itemid);
             ps.setInt(2,receiptNumber);
@@ -238,25 +250,119 @@ public class Employee extends controller {
                 ps = con.prepareStatement("INSERT INTO itemsInPurchase VALUES (?,?,1)");
                 ps.setInt(1, receiptNumber);
                 ps.setInt(2, itemid);
-            }else{
+                ps.executeUpdate();
+            }
+            else{
                 ps = con.prepareStatement("UPDATE itemsInPurchase SET amount = ? WHERE itemID = ? AND receiptNumber = ?");
                 ps.setInt(3, receiptNumber);
                 ps.setInt(2, itemid);
                 ps.setInt(1,rs.getInt("amount") + 1);
+                ps.executeUpdate();
             }
-
-
-            ps.executeUpdate();
-
             con.commit();
+            ps.close();
 
         }
+        ps.close();
+        return rvalue;
+
+    }
+
+    private double deleteItem(int lastItem, int receiptNumber, double price) throws SQLException, IOException{
+
+        double rprice = price;
+        int itemid;
+        System.out.print("\npress 0 to quit");
+        System.out.print("\nPress 1 to delete last item");
+        System.out.print("\nEnter itemID to delete ");
+        itemid = Integer.parseInt(in.readLine());
+
+        if(itemid == 0)
+            ;//do nothing
+        else if(itemid == 1){
+            deleteLastItem(lastItem,receiptNumber);
+        }else{
+            rprice = deleteItemHelper(itemid,receiptNumber);
+        }
+
+        return rprice;
+    }
+
+    private void deleteLastItem(int lastItem, int receiptNumber) throws SQLException{
+        PreparedStatement  ps;
+        ResultSet  rs;
+        int amount;
+        double price;
+        ps = con.prepareStatement("SELECT * FROM itemsInPurchase WHERE itemID = ? AND receiptNumber = ?");
+        ps.setInt(1,lastItem);
+        ps.setInt(2,receiptNumber);
+        rs = ps.executeQuery();
+        rs.next();
+        amount = rs.getInt("amount");
+        if(amount == 1){
+            ps = con.prepareStatement("DELETE FROM ItemsInPurchase WHERE itemID = ? AND receiptNumber = ?");
+            ps.setInt(1,lastItem);
+            ps.setInt(2,receiptNumber);
+            ps.executeUpdate();
+
+        }
+        else {
+            ps = con.prepareStatement("UPDATE itemsInPurchase SET amount = ? WHERE itemID = ? AND receiptNumber = ?");
+            ps.setInt(3, receiptNumber);
+            ps.setInt(2, lastItem);
+            System.out.println(amount - 1);
+            ps.setInt(1,amount - 1);
+            ps.executeUpdate();
+        }
+        con.commit();
         ps.close();
 
     }
 
-    private void deleteItem(){
-
+    private double deleteItemHelper (int itemId, int receiptNumber) throws SQLException{
+        PreparedStatement  ps;
+        ResultSet  rs;
+        double price = 0;
+        boolean vaildItem = true;
+        ps = con.prepareStatement("SELECT * FROM item WHERE itemID = ?");
+        ps.setInt(1, itemId);
+        rs = ps.executeQuery();
+        if(!rs.next())
+            vaildItem = false;
+        else
+            price = rs.getDouble("price");
+        ps = con.prepareStatement("SELECT * FROM itemsInPurchase WHERE itemID = ? AND receiptNumber = ?");
+        ps.setInt(1,itemId);
+        ps.setInt(2,receiptNumber);
+        rs = ps.executeQuery();
+        if(!rs.next())
+            vaildItem = false;
+        if(vaildItem)
+            deleteLastItem(itemId,receiptNumber);
+        else
+            System.out.print("\nInvaild itemID or item doesn't in list");
+        ps.close();
+        return price;
     }
+
+    private void purchaseQuit(int receiptNumber) throws SQLException{
+        PreparedStatement ps;
+        ps = con.prepareStatement("DELETE FROM Purchase WHERE receiptNumber = ?");
+        ps.setInt(1,receiptNumber);
+        ps.executeUpdate();
+        con.commit();
+        ps.close();
+        System.out.println("\nPurchase canceled");
+    }
+
+    private void purchaseFinish(int receiptNumber, double totalPrice) throws SQLException{
+        PreparedStatement ps;
+        ps = con.prepareStatement("UPDATE Purchase SET totalPrice = ? WHERE receiptNumber = ?");
+        ps.setDouble(1,totalPrice);
+        ps.setInt(2,receiptNumber);
+        ps.executeUpdate();
+        System.out.println("\nPurchase finished");
+    }
+
 
     }
