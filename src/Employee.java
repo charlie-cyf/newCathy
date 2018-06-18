@@ -5,6 +5,7 @@ import java.util.Date;
 
 public class Employee extends controller {
     private int id;
+        
     private int branch;
 
     public Employee() {}
