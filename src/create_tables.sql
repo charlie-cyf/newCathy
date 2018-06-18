@@ -104,7 +104,7 @@ CREATE TABLE ItemsInPurchase (
 	itemID INTEGER NOT NULL,
 	amount INTEGER NOT NULL,
 	primary key(receiptNumber, itemID),
-	FOREIGN KEY (receiptNumber) REFERENCES Purchase,
+	FOREIGN KEY (receiptNumber) REFERENCES Purchase ON DELETE CASCADE,
 	FOREIGN KEY (itemID) REFERENCES Item
 );
 

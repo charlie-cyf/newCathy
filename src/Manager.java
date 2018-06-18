@@ -757,11 +757,14 @@ public class Manager extends controller{
       String dealName = searchDeal();
       System.out.println("plase enter item id");
       int itemId = searchItem();
+      System.out.println("please enter new percentage")
       double percent = Double.parseDouble(in.readLine());
       try {
         PreparedStatement ps = con.prepareStatement("UPDATE Deal SET percentage = ? WHERE itemID = ? AND dealName = \'"+dealName+"\'");
         ps.setDouble(1, percent);
         ps.setInt(2, itemId);
+        con.commit();
+        System.out.println("successed!");
       } catch(SQLException se){
         System.out.println("update failed!");
       }
