@@ -798,8 +798,8 @@ public class Manager extends controller{
       inputDay = Integer.parseInt(in.readLine());
 
       java.sql.Timestamp endDate = new java.sql.Timestamp(inputYear, inputMonth, inputDay, 0, 0, 0, 0);
-      
-      PreparedStatement ps = con.prepareStatement("UPDATE Deal d SET d.startDate = ? , d.endDate = ? WHERE d.dealName IN (SELECT dealName FROM Deal d2 WHERE d2.dealName = \'"+dealName+"\')");
+
+      PreparedStatement ps = con.prepareStatement("UPDATE Deal d SET d.startDate = ? , d.endDate = ? WHERE d.dealName IN (SELECT dealName FROM Deal d2 WHERE d2.dealName = \'" +dealName+ "\')");
       ps.setTimestamp(1, startDate);
       ps.setTimestamp(2, endDate);
     //  ps.setString(3, dealName);
