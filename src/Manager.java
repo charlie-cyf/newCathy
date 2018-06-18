@@ -414,8 +414,9 @@ public class Manager extends controller{
                 System.out.print("1.  Add item to deal\n");
                 System.out.print("2.  delete deal\n");
                 System.out.print("3.  delete item from deal\n");
-                System.out.print("4.  modify deal name or duration\n>> ");
-                System.out.println("5. modify deal percentage");
+                System.out.print("4.  modify deal name\n>> ");
+                System.out.println("5. modify deal Duration");
+                System.out.println("6. modify deal percentage");
 
 
                 choice = Integer.parseInt(in.readLine());
