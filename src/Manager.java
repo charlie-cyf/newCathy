@@ -436,7 +436,7 @@ public class Manager extends controller{
                         //modifyDealName();
                         break;
                     case 5:
-                        //modifyDealDuration();
+                        modifyDealDuration();
                     case 6:
                         modifyDealPercent();
                         break;
@@ -757,17 +757,52 @@ public class Manager extends controller{
       String dealName = searchDeal();
       System.out.println("plase enter item id");
       int itemId = searchItem();
-      System.out.println("please enter new percentage")
+      System.out.println("please enter new percentage");
       double percent = Double.parseDouble(in.readLine());
       try {
         PreparedStatement ps = con.prepareStatement("UPDATE Deal SET percentage = ? WHERE itemID = ? AND dealName = \'"+dealName+"\'");
         ps.setDouble(1, percent);
         ps.setInt(2, itemId);
+        ps.executeUpdate();
         con.commit();
         System.out.println("successed!");
       } catch(SQLException se){
         System.out.println("update failed!");
       }
+
+    }
+
+    private void modifyDealDuration() throws IOException, SQLException {
+      System.out.println("enter the deal name you want to modify");
+      String dealName = searchDeal();
+      System.out.print("\nEnter starting year: ");
+      int inputYear = Integer.parseInt(in.readLine());
+
+      System.out.print("\nEnter starting Month: ");
+      int inputMonth = Integer.parseInt(in.readLine());
+
+      System.out.print("\nEnter starting Day: ");
+      int inputDay = Integer.parseInt(in.readLine());
+
+      java.sql.Timestamp startDate = new java.sql.Timestamp(inputYear, inputMonth, inputDay, 0, 0, 0, 0);
+
+      System.out.print("\nEnter ending year: ");
+       inputYear = Integer.parseInt(in.readLine());
+
+      System.out.print("\nEnter ending Month: ");
+      inputMonth = Integer.parseInt(in.readLine());
+
+      System.out.print("\nEnter ending Day: ");
+      inputDay = Integer.parseInt(in.readLine());
+
+      java.sql.Timestamp endDate = new java.sql.Timestamp(inputYear, inputMonth, inputDay, 0, 0, 0, 0);
+      PreparedStatement ps = con.prepareStatement("UPDATE Deal SET startDate = ? AND endDate = ? WHERE dealName = \'"+dealName+"\'");
+      ps.setTimestamp(1, startDate);
+      ps.setTimestamp(2, endDate);
+      ps.executeUpdate();
+      con.commit();
+      System.out.println("successed!");
+
 
     }
 
