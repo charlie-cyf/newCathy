@@ -433,12 +433,12 @@ public class Manager extends controller{
                         deleteItemFromDeal();
                         break;
                     case 4:
-                        modifyDealName();
+                        //modifyDealName();
                         break;
                     case 5:
-                        modifyDealDuration();
+                        //modifyDealDuration();
                     case 6:
-                        //modifyDealPercent();
+                        modifyDealPercent();
                         break;
                 }
             }
@@ -750,6 +750,22 @@ public class Manager extends controller{
         ps.executeUpdate("DELETE FROM (SELECT * FROM Deal d WHERE d.dealName = \'"+dName+"\')");
         con.commit();
         System.out.println("delete successed!");
+    }
+
+    private void modifyDealPercent() throws IOException, SQLException{
+      System.out.print("please enter deal name");
+      String dealName = searchDeal();
+      System.out.println("plase enter item id");
+      int itemId = searchItem();
+      double percent = Double.parseDouble(in.readLine());
+      try {
+        PreparedStatement ps = con.prepareStatement("UPDATE Deal SET percentage = ? WHERE itemID = ? AND dealName = \'"+dealName+"\'");
+        ps.setDouble(1, percent);
+        ps.setInt(2, itemId);
+      } catch(SQLException se){
+        System.out.println("update failed!");
+      }
+
     }
 
 }
